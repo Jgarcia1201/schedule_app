@@ -1,9 +1,10 @@
-package helper;
+package model;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 
-public class JDBC {
+public class DBManager {
     private static final String protocol = "jdbc";
     private static final String vendor = ":mysql:";
     private static final String location = "//localhost/";
@@ -21,22 +22,26 @@ public class JDBC {
             connection = DriverManager.getConnection(jdbcUrl, userName, password); // Reference Connection Object
             System.out.println("Connection Successful!");
         }
-        catch (Exception e)
-        {
-            System.out.println("Error: " + e.getMessage());
+        catch (SQLException e) {
+            e.printStackTrace();
         }
+        catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static Connection getConnection() {
+        return connection;
     }
 
     public static void closeConnection()
     {
-        try
-        {
+        try {
             connection.close();
-            System.out.println("Connection Closed!");
+            System.out.println("Connection Ended!");
         }
-        catch (Exception e)
-        {
-            System.out.print("Error: " + e.getMessage());
+        catch (Exception e) {
+            // do nothing.
         }
     }
 }
