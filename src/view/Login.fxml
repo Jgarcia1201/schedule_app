@@ -6,16 +6,16 @@
 
 <AnchorPane prefHeight="400.0" prefWidth="350.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.Login">
    <children>
-      <Label layoutX="102.0" layoutY="36.0" text="Pen Me In">
+      <Label fx:id="loginTitle" layoutX="102.0" layoutY="36.0" text="login.title">
          <font>
             <Font size="33.0" />
          </font></Label>
-      <Label layoutX="114.0" layoutY="93.0" text="Scheduling Application" />
-      <TextField layoutX="101.0" layoutY="147.0" />
-      <TextField layoutX="101.0" layoutY="200.0" />
-      <Label layoutX="100.0" layoutY="130.0" text="Username" />
-      <Label layoutX="102.0" layoutY="183.0" text="Password" />
-      <Label layoutX="157.0" layoutY="361.0" text="English" />
-      <Button layoutX="152.0" layoutY="245.0" mnemonicParsing="false" text="Login" />
+      <Label fx:id="loginSubtitle" layoutX="114.0" layoutY="93.0" text="login.subtitle" />
+      <TextField fx:id="userNameInput" layoutX="101.0" layoutY="147.0" />
+      <TextField fx:id="passwordInput" layoutX="101.0" layoutY="200.0" />
+      <Label fx:id="loginUsernameLabel" layoutX="100.0" layoutY="130.0" text="login.username" />
+      <Label fx:id="loginPasswordLabel" layoutX="102.0" layoutY="183.0" text="login.password" />
+      <Label fx:id="languageLabel" layoutX="157.0" layoutY="361.0" text="login.language" />
+      <Button fx:id="loginButton" layoutX="152.0" layoutY="245.0" mnemonicParsing="false" onAction="#onLogin" text="login.button" />
    </children>
 </AnchorPane>
