@@ -18,6 +18,24 @@ public class AppointmentDAO {
 
     public AppointmentDAO() {} // Constructor.
 
+    public static Appointment getAppointment(int id) {
+        try {
+            ObservableList<Appointment> all = getAllApps();
+            for (Appointment app : all) {
+                if (app.getAppointmentId() == id) {
+                    return app;
+                }
+                else {
+                    throw new Exception();
+                }
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public static ObservableList<Appointment> getAllApps() {
         String sqlStatement = "SELECT * FROM appointments";
         try {
@@ -50,6 +68,4 @@ public class AppointmentDAO {
         }
         return allApps;
     }
-
-    // Appointment DAO.
 }

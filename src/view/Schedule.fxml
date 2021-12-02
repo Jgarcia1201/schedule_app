@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="650.0" prefWidth="1050.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.Schedule">
+<AnchorPane prefHeight="650.0" prefWidth="1050.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.Schedule">
    <children>
       <TabPane layoutX="177.0" layoutY="59.0" prefHeight="591.0" prefWidth="873.0" tabClosingPolicy="UNAVAILABLE">
         <tabs>
@@ -12,18 +12,18 @@
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <TableView fx:id="weekTable" layoutY="1.0" prefHeight="561.0" prefWidth="873.0">
+                        <TableView fx:id="weekTable" layoutY="1.0" prefHeight="561.0" prefWidth="873.0" style="-fx-background-color: white;">
                           <columns>
-                            <TableColumn fx:id="weekID" prefWidth="58.0" text="ID" />
-                            <TableColumn fx:id="weekTitle" prefWidth="76.0" text="Title" />
-                              <TableColumn fx:id="weekDesc" prefWidth="91.0" text="Description" />
-                              <TableColumn fx:id="weekLocation" prefWidth="87.0" text="Location" />
-                              <TableColumn fx:id="weekContact" prefWidth="100.0" text="Contact" />
-                              <TableColumn fx:id="weekType" prefWidth="65.0" text="Type" />
-                              <TableColumn fx:id="weekStart" prefWidth="105.0" text="Start" />
-                              <TableColumn fx:id="weekEnd" prefWidth="118.0" text="End" />
-                              <TableColumn fx:id="weekCustomerId" prefWidth="93.0" text="Customer ID" />
-                              <TableColumn fx:id="weekUserId" prefWidth="79.0" text="User ID" />
+                            <TableColumn fx:id="weekID" editable="false" prefWidth="58.0" sortable="false" text="ID" />
+                            <TableColumn fx:id="weekTitle" editable="false" prefWidth="76.0" sortable="false" text="Title" />
+                              <TableColumn fx:id="weekDesc" editable="false" prefWidth="91.0" sortable="false" text="Description" />
+                              <TableColumn fx:id="weekLocation" editable="false" prefWidth="87.0" sortable="false" text="Location" />
+                              <TableColumn fx:id="weekContact" editable="false" prefWidth="100.0" sortable="false" text="Contact" />
+                              <TableColumn fx:id="weekType" editable="false" prefWidth="65.0" sortable="false" text="Type" />
+                              <TableColumn fx:id="weekStart" editable="false" prefWidth="105.0" sortable="false" text="Start" />
+                              <TableColumn fx:id="weekEnd" editable="false" prefWidth="118.0" sortable="false" text="End" />
+                              <TableColumn fx:id="weekCustomerId" editable="false" prefWidth="93.0" sortable="false" text="Customer ID" />
+                              <TableColumn fx:id="weekUserId" editable="false" prefWidth="79.0" sortable="false" text="User ID" />
                           </columns>
                         </TableView>
                      </children>
@@ -36,16 +36,16 @@
                      <children>
                          <TableView fx:id="monthTable" layoutY="1.0" prefHeight="561.0" prefWidth="873.0">
                              <columns>
-                                 <TableColumn prefWidth="58.0" text="ID" />
-                                 <TableColumn prefWidth="76.0" text="Title" />
-                                 <TableColumn prefWidth="91.0" text="Description" />
-                                 <TableColumn prefWidth="87.0" text="Location" />
-                                 <TableColumn prefWidth="100.0" text="Contact" />
-                                 <TableColumn prefWidth="65.0" text="Type" />
-                                 <TableColumn prefWidth="105.0" text="Start" />
-                                 <TableColumn prefWidth="118.0" text="End" />
-                                 <TableColumn prefWidth="93.0" text="Customer ID" />
-                                 <TableColumn prefWidth="79.0" text="User ID" />
+                                 <TableColumn fx:id="monthID" prefWidth="58.0" text="ID" />
+                                 <TableColumn fx:id="monthTitle" prefWidth="76.0" text="Title" />
+                                 <TableColumn fx:id="monthDesc" prefWidth="91.0" text="Description" />
+                                 <TableColumn fx:id="monthLocation" prefWidth="87.0" text="Location" />
+                                 <TableColumn fx:id="monthContact" prefWidth="100.0" text="Contact" />
+                                 <TableColumn fx:id="monthType" prefWidth="65.0" text="Type" />
+                                 <TableColumn fx:id="monthStart" prefWidth="105.0" text="Start" />
+                                 <TableColumn fx:id="monthEnd" prefWidth="118.0" text="End" />
+                                 <TableColumn fx:id="monthCustomerID" prefWidth="93.0" text="Customer ID" />
+                                 <TableColumn fx:id="monthUserID" prefWidth="79.0" text="User ID" />
                              </columns>
                          </TableView>
                      </children>
@@ -54,9 +54,9 @@
           </Tab>
         </tabs>
       </TabPane>
-      <Button layoutX="958.0" layoutY="27.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="78.0" text="User Log" />
-      <Button layoutX="869.0" layoutY="27.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="78.0" text="Reports" />
-      <Pane layoutY="59.0" prefHeight="591.0" prefWidth="177.0">
+      <Button layoutX="958.0" layoutY="15.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="78.0" text="User Log" />
+      <Button layoutX="870.0" layoutY="15.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="78.0" text="Reports" />
+      <Pane layoutY="59.0" prefHeight="591.0" prefWidth="177.0" style="-fx-background-color: dfdfdf;">
          <children>
             <Button layoutX="62.0" layoutY="552.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="54.0" text="Exit" />
             <Button layoutX="25.0" layoutY="42.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="127.0" text="Add Appointment" />
@@ -69,10 +69,11 @@
             <Button layoutX="25.0" layoutY="234.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="127.0" text="Modify Customer" />
          </children>
       </Pane>
-      <Label layoutX="19.0" layoutY="6.0" text="Pen Me In">
+      <Label layoutX="19.0" layoutY="6.0" text="Pen Me In" textFill="WHITE">
          <font>
             <Font name="Franklin Gothic Demi Cond" size="37.0" />
          </font>
       </Label>
+      <ChoiceBox layoutX="706.0" layoutY="15.0" prefWidth="150.0" />
    </children>
 </AnchorPane>
