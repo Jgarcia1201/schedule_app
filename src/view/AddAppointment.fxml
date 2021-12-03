@@ -67,26 +67,26 @@
                   <Font size="16.0" />
                </font>
             </Label>
-            <TextField fx:id="addAppAppID" layoutX="241.0" layoutY="20.0" prefHeight="25.0" prefWidth="188.0" />
+            <TextField fx:id="addAppAppID" editable="false" layoutX="241.0" layoutY="20.0" prefHeight="25.0" prefWidth="188.0" />
             <TextField fx:id="addAppCustomerId" layoutX="241.0" layoutY="72.0" prefHeight="25.0" prefWidth="188.0" />
             <TextField fx:id="addAppUserId" layoutX="241.0" layoutY="118.0" prefHeight="25.0" prefWidth="188.0" />
-            <TextField fx:id="addAptTitle" layoutX="241.0" layoutY="170.0" prefHeight="25.0" prefWidth="188.0" />
-            <TextField fx:id="addAptDesc" layoutX="241.0" layoutY="222.0" prefHeight="25.0" prefWidth="188.0" />
+            <TextField fx:id="addAppTitle" layoutX="241.0" layoutY="170.0" prefHeight="25.0" prefWidth="188.0" />
+            <TextField fx:id="addAppDesc" layoutX="241.0" layoutY="222.0" prefHeight="25.0" prefWidth="188.0" />
             <TextField fx:id="addAppLocation" layoutX="241.0" layoutY="274.0" prefHeight="25.0" prefWidth="188.0" />
-            <TextField fx:id="addAppContact" layoutX="241.0" layoutY="326.0" prefHeight="25.0" prefWidth="188.0" />
             <TextField fx:id="addAppType" layoutX="241.0" layoutY="372.0" prefHeight="25.0" prefWidth="188.0" />
-            <ChoiceBox fx:id="addAppStartTime" layoutX="240.0" layoutY="458.0" prefHeight="25.0" prefWidth="188.0" />
-            <ChoiceBox fx:id="addAppEndTime" layoutX="241.0" layoutY="498.0" prefHeight="25.0" prefWidth="188.0" />
+            <ComboBox fx:id="addAppStartTime" layoutX="240.0" layoutY="458.0" prefHeight="25.0" prefWidth="188.0" />
+            <ComboBox fx:id="addAppEndTime" layoutX="241.0" layoutY="498.0" prefHeight="25.0" prefWidth="188.0" />
             <Label layoutX="56.0" layoutY="416.0" text="Date">
                <font>
                   <Font size="16.0" />
                </font>
             </Label>
-            <DatePicker layoutX="241.0" layoutY="416.0" prefHeight="25.0" prefWidth="188.0" />
+            <DatePicker fx:id="addAppDateBox" layoutX="241.0" layoutY="416.0" prefHeight="25.0" prefWidth="188.0" />
+            <ComboBox fx:id="addAppContact" layoutX="241.0" layoutY="326.0" prefHeight="25.0" prefWidth="188.0" />
          </children></Pane>
       <Pane layoutY="615.0" prefHeight="69.0" prefWidth="482.0" style="-fx-background-color: #bababa;">
          <children>
-            <Button fx:id="addAppSaveButton" layoutX="121.0" layoutY="16.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="90.0" text="Save" />
+            <Button fx:id="addAppSaveButton" layoutX="121.0" layoutY="16.0" mnemonicParsing="false" onAction="#onAddAppSaveButtonAction" prefHeight="38.0" prefWidth="90.0" text="Save" />
             <Button fx:id="addAppExitButton" layoutX="275.0" layoutY="16.0" mnemonicParsing="false" onAction="#onAddAppExitButtonAction" prefHeight="38.0" prefWidth="90.0" text="Exit" textFill="#c30000" />
          </children></Pane>
    </children>

@@ -2,6 +2,7 @@ package controller;
 
 import DAO.AppointmentDAO;
 import DAO.CustomerDAO;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
@@ -37,7 +38,7 @@ public class Schedule implements Initializable {
     public TableColumn<Appointment, LocalDateTime> weekEnd;
     public TableColumn<Appointment, Integer> weekCustomerId;
     public TableColumn<Appointment, Integer> weekUserId;
-    public TableView monthTable;
+    public TableView<Appointment> monthTable;
     public TableColumn<Appointment, Integer> monthID;
     public TableColumn<Appointment, String> monthTitle;
     public TableColumn<Appointment, String> monthDesc;
@@ -48,7 +49,7 @@ public class Schedule implements Initializable {
     public TableColumn<Appointment, LocalDateTime> monthEnd;
     public TableColumn<Appointment, Integer> monthCustomerID;
     public TableColumn<Appointment, Integer> monthUserID;
-    public TableView allTable;
+    public TableView<Appointment> allTable;
     public TableColumn<Appointment, Integer> allID;
     public TableColumn<Appointment, String> allTitle;
     public TableColumn<Appointment, String> allDesc;
@@ -62,12 +63,12 @@ public class Schedule implements Initializable {
     public TableView customerTable;
     public TableColumn<Customer, String> customerTableName;
 
-
-    ObservableList<Appointment> appointments = AppointmentDAO.getAllApps();
-    ObservableList<Customer> allCustomers = CustomerDAO.getAllCustomers();
+    private static ObservableList<Appointment> appointments = AppointmentDAO.getAllApps();
+    private ObservableList<Customer> allCustomers = CustomerDAO.getAllCustomers();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
         // Populating All Appointments Table
         allTable.setItems(appointments);
         allID.setCellValueFactory(new PropertyValueFactory<>("appointmentId"));

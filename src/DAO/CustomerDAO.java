@@ -20,6 +20,7 @@ public class CustomerDAO {
 
     public static ObservableList<Customer> getAllCustomers() {
         String sql = "SELECT * FROM customers";
+        allCustomers.clear();
         try {
             DBQuery.setStatement(conn);
             Statement statement = DBQuery.getStatement();

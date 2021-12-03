@@ -83,7 +83,7 @@
             <Button fx:id="mainExitButton" layoutX="62.0" layoutY="552.0" mnemonicParsing="false" onAction="#onMainExitButtonAction" prefHeight="25.0" prefWidth="54.0" text="Exit" />
             <Button fx:id="mainAddAppButton" layoutX="25.0" layoutY="42.0" mnemonicParsing="false" onAction="#onMainAddAppButtonAction" prefHeight="25.0" prefWidth="127.0" text="Add Appointment" />
             <Label layoutX="14.0" layoutY="14.0" text="Appointments:" />
-            <Button layoutX="25.0" layoutY="118.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="127.0" text="Delete Appointment" textFill="#d00000" />
+            <Button layoutX="25.0" layoutY="118.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="127.0" text="Cancel Appointment" textFill="#d00000" />
             <Button layoutX="25.0" layoutY="80.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="127.0" text="Modify Appointment" />
             <Label layoutX="14.0" layoutY="167.0" text="Customers:" />
              <Button layoutX="25.0" layoutY="196.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="127.0" text="View All Customers" />

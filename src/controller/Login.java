@@ -33,6 +33,8 @@ public class Login implements Initializable {
     private Stage stage;
     private Scene scene;
 
+    public static User temp = new User();
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         // Setting Language:
@@ -47,15 +49,13 @@ public class Login implements Initializable {
 
 
     public void onLogin(ActionEvent event) {
-        User temp = new User();
         try {
             if (checkLogin(temp)) {
+                // Set Current User
+                temp.setCurrentUser(userNameInput.getText());
+                temp.setUserId(1);
                 // Show Schedule Page
-                Parent root = FXMLLoader.load(getClass().getResource("/view/Schedule.fxml"));
-                stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-                scene = new Scene(root);
-                stage.setScene(scene);
-                stage.show();
+                showMainMenu(event);
             }
             else if (userNameInput.getText().equals("") || passwordInput.getText().equals("")) {
                 showAlert("empty");
@@ -106,6 +106,14 @@ public class Login implements Initializable {
         alert.showAndWait();
         userNameInput.setText("");
         passwordInput.setText("");
+    }
+
+    public void showMainMenu(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("/view/Schedule.fxml"));
+        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
     }
 
 

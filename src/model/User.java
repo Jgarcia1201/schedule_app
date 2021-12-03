@@ -10,6 +10,7 @@ public class User {
     private LocalDateTime createDate;
     private String createdBy;
     private Timestamp lastUpdatedBy;
+    public static String currentUser;
 
     public int getUserId() {
         return userId;
@@ -57,5 +58,13 @@ public class User {
 
     public void setLastUpdatedBy(Timestamp lastUpdatedBy) {
         this.lastUpdatedBy = lastUpdatedBy;
+    }
+
+    public void setCurrentUser(String s) {
+        User.currentUser = s;
+    }
+
+    public String getCurrentUser() {
+        return currentUser;
     }
 }
