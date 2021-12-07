@@ -88,8 +88,8 @@ public class Schedule implements Initializable {
         allLocation.setCellValueFactory(new PropertyValueFactory<>("location"));
         allContact.setCellValueFactory(new PropertyValueFactory<>("contact"));
         allType.setCellValueFactory(new PropertyValueFactory<>("type"));
-        allStart.setCellValueFactory(new PropertyValueFactory<>("start"));
-        allEnd.setCellValueFactory(new PropertyValueFactory<>("end"));
+        allStart.setCellValueFactory(new PropertyValueFactory<>("displayStart"));
+        allEnd.setCellValueFactory(new PropertyValueFactory<>("displayEnd"));
         allCustomerId.setCellValueFactory(new PropertyValueFactory<>("customerId"));
         allUserId.setCellValueFactory(new PropertyValueFactory<>("userId"));
         allTable.setVisible(true);
@@ -161,8 +161,8 @@ public class Schedule implements Initializable {
             weekLocation.setCellValueFactory(new PropertyValueFactory<>("location"));
             weekContact.setCellValueFactory(new PropertyValueFactory<>("contact"));
             weekType.setCellValueFactory(new PropertyValueFactory<>("type"));
-            weekStart.setCellValueFactory(new PropertyValueFactory<>("start"));
-            weekEnd.setCellValueFactory(new PropertyValueFactory<>("end"));
+            weekStart.setCellValueFactory(new PropertyValueFactory<>("displayStart"));
+            weekEnd.setCellValueFactory(new PropertyValueFactory<>("displayEnd"));
             weekCustomerId.setCellValueFactory(new PropertyValueFactory<>("customerId"));
             weekUserId.setCellValueFactory(new PropertyValueFactory<>("userId"));
         }
@@ -178,8 +178,8 @@ public class Schedule implements Initializable {
             monthLocation.setCellValueFactory(new PropertyValueFactory<>("location"));
             monthContact.setCellValueFactory(new PropertyValueFactory<>("contact"));
             monthType.setCellValueFactory(new PropertyValueFactory<>("type"));
-            monthStart.setCellValueFactory(new PropertyValueFactory<>("start"));
-            monthEnd.setCellValueFactory(new PropertyValueFactory<>("end"));
+            monthStart.setCellValueFactory(new PropertyValueFactory<>("displayStart"));
+            monthEnd.setCellValueFactory(new PropertyValueFactory<>("displayEnd"));
             monthCustomerId.setCellValueFactory(new PropertyValueFactory<>("customerId"));
             monthUserId.setCellValueFactory(new PropertyValueFactory<>("userId"));
         }
@@ -195,8 +195,8 @@ public class Schedule implements Initializable {
             allLocation.setCellValueFactory(new PropertyValueFactory<>("location"));
             allContact.setCellValueFactory(new PropertyValueFactory<>("contact"));
             allType.setCellValueFactory(new PropertyValueFactory<>("type"));
-            allStart.setCellValueFactory(new PropertyValueFactory<>("start"));
-            allEnd.setCellValueFactory(new PropertyValueFactory<>("end"));
+            allStart.setCellValueFactory(new PropertyValueFactory<>("displayStart"));
+            allEnd.setCellValueFactory(new PropertyValueFactory<>("displayEnd"));
             allCustomerId.setCellValueFactory(new PropertyValueFactory<>("customerId"));
             allUserId.setCellValueFactory(new PropertyValueFactory<>("userId"));
         }
@@ -212,7 +212,7 @@ public class Schedule implements Initializable {
                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                 alert.setTitle("Delete Confirmation");
                 alert.setHeaderText("WARNING!");
-                alert.setContentText("Are You Sure You Want To Delete " + selected.getTitle() + "?");
+                alert.setContentText("Are You Sure You Want To Delete: " + selected.getAppointmentId() + " " + selected.getTitle() + " a " + selected.getType() + " Appointment?");
                 Optional<ButtonType> result = alert.showAndWait();
                 if (result.isPresent() && result.get() == ButtonType.OK) {
                     AppointmentDAO.removeApp(selected);
@@ -230,7 +230,7 @@ public class Schedule implements Initializable {
                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                 alert.setTitle("Delete Confirmation");
                 alert.setHeaderText("WARNING!");
-                alert.setContentText("Are You Sure You Want To Delete " + selected.getTitle() + "?");
+                alert.setContentText("Are You Sure You Want To Delete: " + selected.getAppointmentId() + " " + selected.getTitle() + " a " + selected.getType() + " Appointment?");
                 Optional<ButtonType> result = alert.showAndWait();
                 if (result.isPresent() && result.get() == ButtonType.OK) {
                     AppointmentDAO.removeApp(selected);
@@ -248,7 +248,9 @@ public class Schedule implements Initializable {
                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                 alert.setTitle("Delete Confirmation");
                 alert.setHeaderText("WARNING!");
-                alert.setContentText("Are You Sure You Want To Delete " + selected.getTitle() + "?");
+                alert.setContentText("Are You Sure You Want To Delete: \n"
+                        + selected.getTitle() + " a " + selected.getType() + " Appointment?" + "\n\n"
+                        + "ID Number: " + selected.getAppointmentId());
                 Optional<ButtonType> result = alert.showAndWait();
                 if (result.isPresent() && result.get() == ButtonType.OK) {
                     AppointmentDAO.removeApp(selected);
@@ -257,7 +259,6 @@ public class Schedule implements Initializable {
             }
         }
     }
-
 
     public void onMainExitButtonAction(ActionEvent event) {
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();

@@ -18,7 +18,6 @@ public class ContactDAO {
     private static ObservableList<Contact> allContacts = FXCollections.observableArrayList();
 
     public static Contact getContactByName(String s) {
-        allContacts.clear();
         ObservableList<Contact> temp = getAllContacts();
         for (Contact c : temp) {
             if (s.equals(c.getContactName())) {
@@ -29,7 +28,6 @@ public class ContactDAO {
     }
 
     public static Contact getContactById(int id) {
-        allContacts.clear();
         ObservableList<Contact> temp = getAllContacts();
         for (Contact c : temp) {
             if (c.getContactId() == id) {

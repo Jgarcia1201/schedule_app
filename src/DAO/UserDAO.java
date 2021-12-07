@@ -21,6 +21,7 @@ public class UserDAO {
 
     public static ObservableList<User> getAllUsers() {
         String sqlStatement = "SELECT * FROM users";
+        allUsers.clear();
         try {
             DBQuery.setStatement(conn);
             Statement statement = DBQuery.getStatement();
@@ -40,23 +41,23 @@ public class UserDAO {
         return allUsers;
     }
 
-    public static User getUser(int userId) throws SQLException {
-        String selectStatement = "SELECT * FROM users WHERE User_ID=" + userId; // SQL
-        User currentUser = new User();
-
-        try {
-            DBQuery.setStatement(conn);
-            Statement statement = DBQuery.getStatement();
-            statement.execute(selectStatement);
-            ResultSet results = statement.getResultSet();
-            if (results.next()) {
-                currentUser.setUserName(results.getString("User_Name"));
-                currentUser.setPassword(results.getString("Password"));
+    public static User getUserByName(String s) {
+        allUsers = getAllUsers();
+        for (User u : allUsers) {
+            if (u.getUserName().equals(s)) {
+                return u;
             }
         }
-        catch (Exception e) {
-            System.out.print("error");
+        return null;
+    }
+
+    public static User getUserById(int i) {
+        allUsers = getAllUsers();
+        for (User u: allUsers) {
+            if (u.getUserId() == i) {
+                return u;
+            }
         }
-        return currentUser;
+        return null;
     }
 }

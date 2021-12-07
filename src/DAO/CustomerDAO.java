@@ -59,4 +59,24 @@ public class CustomerDAO {
         return null;
     }
 
+    public static Customer getCustomerByName(String s) {
+        ObservableList<Customer> customers = getAllCustomers();
+        for (Customer c : customers) {
+            if (c.getName().equals(s)) {
+                return c;
+            }
+        }
+        return null;
+    }
+
+    public static Customer getCustomerById(int i) {
+        ObservableList<Customer> customer = getAllCustomers();
+        for (Customer c : customer) {
+            if (c.getCustomerId() == i) {
+                return c;
+            }
+        }
+        return null;
+    }
+
 }

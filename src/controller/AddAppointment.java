@@ -3,6 +3,7 @@ package controller;
 import DAO.AppointmentDAO;
 import DAO.ContactDAO;
 import DAO.CustomerDAO;
+import DAO.UserDAO;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -16,6 +17,7 @@ import javafx.stage.Stage;
 import model.Appointment;
 import model.Contact;
 import model.Customer;
+import model.User;
 
 import java.io.IOException;
 import java.net.URL;
@@ -23,11 +25,12 @@ import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.ResourceBundle;
+import java.util.TimeZone;
 
 public class AddAppointment implements Initializable {
     public TextField addAppAppID;
-    public TextField addAppCustomerId;
-    public TextField addAppUserId;
+    public ComboBox<String> addAppCustomer;
+    public ComboBox<String> addAppUser;
     public TextField addAppTitle;
     public TextField addAppDesc;
     public TextField addAppLocation;
@@ -63,10 +66,25 @@ public class AddAppointment implements Initializable {
         ObservableList<Contact> contacts = ContactDAO.getAllContacts();
         ObservableList<String> contactNames = FXCollections.observableArrayList();
         for (Contact c : contacts) {
-            String name = c.getContactName();
-            contactNames.add(name);
+            contactNames.add(c.getContactName());
         }
         addAppContact.setItems(contactNames);
+
+        // User Choice Box
+        ObservableList<User> allUsers = UserDAO.getAllUsers();
+        ObservableList<String> allUserNames = FXCollections.observableArrayList();
+        for (User u: allUsers) {
+            allUserNames.add(u.getUserName());
+        }
+        addAppUser.setItems(allUserNames);
+
+        // Customer Choice Box
+        ObservableList<Customer> allCustomer = CustomerDAO.getAllCustomers();
+        ObservableList<String> customerNames = FXCollections.observableArrayList();
+        for (Customer c : allCustomer) {
+            customerNames.add(c.getName());
+        }
+        addAppCustomer.setItems(customerNames);
     }
 
     public void onAddAppSaveButtonAction(ActionEvent event) {
@@ -80,11 +98,15 @@ public class AddAppointment implements Initializable {
             String start = addAppStartTime.getValue();
             String end = addAppEndTime.getValue();
             LocalDateTime createDate = LocalDateTime.now();
-            String createdBy = Login.temp.getCurrentUser();
+            String createdBy = Login.you.getUserName();
             LocalDateTime lastUpdate = LocalDateTime.now();
-            String lastUpdatedBy = Login.temp.getCurrentUser();
-            int CustomerId = 1;
-            int userId = Login.temp.getUserId();
+            String lastUpdatedBy = Login.you.getUserName();
+            String userChoice = addAppUser.getSelectionModel().getSelectedItem();
+            User selectedUser = UserDAO.getUserByName(userChoice);
+            String customerChoice = addAppCustomer.getSelectionModel().getSelectedItem();
+            Customer selectedCustomer = CustomerDAO.getCustomerByName(customerChoice);
+            int CustomerId = selectedCustomer.getCustomerId();
+            int userId = selectedUser.getUserId();
 
             // Contact Box
             String contactChoiceName = addAppContact.getSelectionModel().getSelectedItem();
@@ -151,10 +173,19 @@ public class AddAppointment implements Initializable {
                 addAppEndTime.getSelectionModel().clearSelection();
             }
             else if (result == "BusinessHours") {
+                String timePattern = "hh:mm a";
+                ZoneId utc = ZoneId.of("UTC");
+                ZoneId local = ZoneId.of(TimeZone.getDefault().getID());
+                ZonedDateTime openUtc = ZonedDateTime.of(LocalDateTime.of((LocalDate.now()), LocalTime.of(13, 00)), utc);
+                LocalTime openLocal = openUtc.withZoneSameInstant(local).toLocalTime();
+                String openLocalDisplayTime = openLocal.format(DateTimeFormatter.ofPattern(timePattern));
+                ZonedDateTime closeUtc = ZonedDateTime.of(LocalDateTime.of((LocalDate.now().plusDays(1)), LocalTime.of(3, 00)), utc);
+                LocalTime closeLocal = closeUtc.withZoneSameInstant(local).toLocalTime();
+                String closeLocalDisplayTime = closeLocal.format(DateTimeFormatter.ofPattern(timePattern));
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("INVALID TIMES");
                 alert.setHeaderText("Appointment Must Be Scheduled Within Business Hours");
-                alert.setContentText("Business Hours are 8AM to 10PM EST");
+                alert.setContentText("Business Hours are Between: " + openLocalDisplayTime + " - " + closeLocalDisplayTime);
                 alert.showAndWait();
                 addAppStartTime.getSelectionModel().clearSelection();
                 addAppEndTime.getSelectionModel().clearSelection();
@@ -172,6 +203,7 @@ public class AddAppointment implements Initializable {
         }
         catch (Exception e) {
             e.printStackTrace();
+            e.getMessage();
         }
     }
 

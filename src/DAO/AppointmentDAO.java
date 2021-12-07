@@ -105,8 +105,9 @@ public class AppointmentDAO {
                 return "BusinessHours";
             }
             // Checking Overlap
+            allApps = getAllApps();
             for (Appointment a : allApps) {
-                if (a.getStart().isEqual(startUtc) || a.getEnd().isEqual(endUtc)) {
+                if (startUtc.isAfter(a.getStart()) && endUtc.isBefore(a.getEnd())) {
                     return "Overlap";
                 }
             }
@@ -130,7 +131,7 @@ public class AppointmentDAO {
             return "Success";
         }
         catch (Exception e) {
-
+            e.printStackTrace();
         }
         return "Fail";
     }
@@ -167,9 +168,10 @@ public class AppointmentDAO {
                 a.setContactId(rs.getInt("Contact_ID"));
                 a.setContact(String.valueOf(ContactDAO.getContactById(a.getContactId()).getContactName()));
                 a.setType(rs.getString("Type"));
-                // DO TIME CONVERSIONS HERE.
                 a.setStart(rs.getTimestamp("Start").toLocalDateTime());
+                a.setDisplayStart(rs.getTimestamp("Start").toLocalDateTime());
                 a.setEnd(rs.getTimestamp("End").toLocalDateTime());
+                a.setDisplayEnd(rs.getTimestamp("End").toLocalDateTime());
                 a.setCreateDate(rs.getTimestamp("Create_Date").toLocalDateTime());
                 a.setCreatedBy(rs.getString("Created_By"));
                 a.setLastUpdate(rs.getTimestamp("Last_Update").toLocalDateTime());
@@ -206,6 +208,73 @@ public class AppointmentDAO {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static String updateApp(Appointment app) {
+        String sqlUpdate = "UPDATE appointments SET Title = ?, Description = ?, Location = ?, Type = ?, Start = ?, " +
+                "End = ?, Create_Date = ?, Created_By = ?, Last_Update = ?, Last_Updated_By = ?, Customer_ID = ?, User_ID = ?, Contact_ID = ? " +
+                "WHERE Appointment_ID = ?";
+        try {
+            DBQuery.setPreparedStatement(conn, sqlUpdate);
+            PreparedStatement ps = DBQuery.getPreparedStatement();
+
+            // Time Conversion
+            LocalDateTime startTime = app.getStart();
+            LocalDate startTimeDate = LocalDate.from(startTime);
+            LocalDateTime endTime = app.getEnd();
+
+            LocalTime openTime = LocalTime.of(13, 00);
+            LocalTime closeTime = LocalTime.of(3,00);
+
+            LocalDateTime open = LocalDateTime.of(startTimeDate, openTime);
+            LocalDateTime close = LocalDateTime.of(startTimeDate.plusDays(1), closeTime);
+
+            LocalDateTime startUtc = handleTimeConversion(startTime, "start");
+            LocalDateTime endUtc = handleTimeConversion(endTime, "end");
+
+            // Checking Start Time Is Before End Time
+            if (startUtc.isAfter(endUtc)) {
+                return "StartBeforeEnd";
+
+            }
+            // Checking Business Hours
+            else if (startUtc.isBefore(open) || startUtc.isAfter(close)) {
+                return "BusinessHours";
+            }
+            // Checking Overlap
+            allApps = getAllApps();
+            for (Appointment a : allApps) {
+                if (!startUtc.isBefore(a.getStart()) && endUtc.isBefore(a.getEnd())) {
+                    return "Overlap";
+                }
+            }
+
+            // Key Value Pairing
+            ps.setString(1, app.getTitle());
+            ps.setString(2, app.getDescription());
+            ps.setString(3, app.getLocation());
+            ps.setString(4, app.getType());
+            ps.setTimestamp(5, Timestamp.valueOf(startUtc));
+            ps.setTimestamp(6, Timestamp.valueOf(endUtc));
+            ps.setTimestamp(7, Timestamp.valueOf(app.getCreateDate()));
+            ps.setString(8, app.getCreatedBy());
+            ps.setTimestamp(9, Timestamp.valueOf(app.getLastUpdate()));
+            ps.setString(10, app.getLastUpdatedBy());
+            ps.setInt(11, app.getCustomerId());
+            ps.setInt(12, app.getUserId());
+            ps.setInt(13, app.getContactId());
+            ps.setInt(14, app.getAppointmentId());
+            ps.execute();
+            allApps.clear();
+            allApps = getAllApps();
+            return "Success";
+
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            System.out.println(e.getMessage());
+            return "Fail";
+        }
     }
 
     private static boolean isThisWeek(LocalDateTime time) {
