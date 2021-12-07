@@ -6,6 +6,7 @@ public class Appointment {
     private int appointmentId;
     private String title;
     private String description;
+    private String contact;
     private String location;
     private String type;
     private LocalDateTime start;
@@ -56,6 +57,14 @@ public class Appointment {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getContact() {
+        return contact;
+    }
+
+    public void setContact(String contact) {
+        this.contact = contact;
     }
 
     public LocalDateTime getStart() {
@@ -129,5 +138,5 @@ public class Appointment {
     public void setContactId(int contactId) {
         this.contactId = contactId;
     }
-// Appointment Class.
+
 }

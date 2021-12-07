@@ -18,14 +18,16 @@ public class AppointmentDAO {
     private static Connection conn = DBManager.getConnection();
 
     private static ObservableList<Appointment> allApps = FXCollections.observableArrayList();
-    public static AtomicInteger appIdGen = new AtomicInteger(5);
+    private static ObservableList<Appointment> weekly = FXCollections.observableArrayList();
+    private static ObservableList<Appointment> monthly = FXCollections.observableArrayList();
+    public static AtomicInteger appIdGen = new AtomicInteger();
 
     public AppointmentDAO() {} // Constructor.
 
     public static Appointment getAppointment(int id) {
         try {
-            ObservableList<Appointment> all = allApps;
-            for (Appointment app : all) {
+            allApps = getAllApps();
+            for (Appointment app : allApps) {
                 if (app.getAppointmentId() == id) {
                     return app;
                 }
@@ -40,8 +42,40 @@ public class AppointmentDAO {
         return null;
     }
 
+    public static ObservableList<Appointment> getMonthApps() {
+        monthly.clear();
+        ObservableList<Appointment> temp = getAllApps();
+        try {
+            for (Appointment app : temp) {
+                if (isThisMonth(app.getStart())) {
+                    monthly.add(app);
+                }
+            }
+        }
+        catch (Exception e) {
+            // do nothing but fix later
+        }
+        return monthly;
+    }
+
+    public static ObservableList<Appointment> getWeekApps() {
+        weekly.clear();
+        ObservableList<Appointment> temp = getAllApps();
+        try {
+            for (Appointment app : temp) {
+                if (isThisWeek(app.getStart())) {
+                    weekly.add(app);
+                }
+            }
+        }
+        catch (Exception e) {
+            // do nothing but fix later
+        }
+        return weekly;
+    }
+
     public static String insertAppointment(Appointment app) {
-        String insertStatement = "INSERT INTO appointments(Appointment_ID, Title, Description, Type, Start, End, Create_Date, Created_By, Last_Update, Last_Updated_By, Customer_ID, User_ID, Contact_ID) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String insertStatement = "INSERT INTO appointments(Appointment_ID, Title, Description, Location, Type, Start, End, Create_Date, Created_By, Last_Update, Last_Updated_By, Customer_ID, User_ID, Contact_ID) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try {
             DBQuery.setPreparedStatement(conn, insertStatement);
             PreparedStatement ps = DBQuery.getPreparedStatement();
@@ -80,16 +114,17 @@ public class AppointmentDAO {
             ps.setInt(1, app.getAppointmentId());
             ps.setString(2, app.getTitle());
             ps.setString(3, app.getDescription());
-            ps.setString(4, app.getType());
-            ps.setTimestamp(5, Timestamp.valueOf(startUtc));
-            ps.setTimestamp(6, Timestamp.valueOf(endUtc));
-            ps.setTimestamp(7, Timestamp.valueOf(app.getCreateDate()));
-            ps.setString(8, app.getCreatedBy());
-            ps.setTimestamp(9, Timestamp.valueOf(app.getLastUpdate()));
-            ps.setString(10, app.getLastUpdatedBy());
-            ps.setInt(11, app.getCustomerId());
-            ps.setInt(12, app.getUserId());
-            ps.setInt(13, app.getCustomerId());
+            ps.setString(4, app.getLocation());
+            ps.setString(5, app.getType());
+            ps.setTimestamp(6, Timestamp.valueOf(startUtc));
+            ps.setTimestamp(7, Timestamp.valueOf(endUtc));
+            ps.setTimestamp(8, Timestamp.valueOf(app.getCreateDate()));
+            ps.setString(9, app.getCreatedBy());
+            ps.setTimestamp(10, Timestamp.valueOf(app.getLastUpdate()));
+            ps.setString(11, app.getLastUpdatedBy());
+            ps.setInt(12, app.getCustomerId());
+            ps.setInt(13, app.getUserId());
+            ps.setInt(14, app.getContactId());
             ps.execute();
             allApps.add(app);
             return "Success";
@@ -98,6 +133,20 @@ public class AppointmentDAO {
 
         }
         return "Fail";
+    }
+
+    public static void removeApp(Appointment app) {
+        String deleteStatement = "DELETE FROM appointments WHERE Appointment_ID = ?";
+        try {
+            DBQuery.setPreparedStatement(conn, deleteStatement);
+            PreparedStatement ps = DBQuery.getPreparedStatement();
+
+            ps.setInt(1, app.getAppointmentId());
+            ps.execute();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static ObservableList<Appointment> getAllApps() {
@@ -116,6 +165,7 @@ public class AppointmentDAO {
                 a.setDescription(rs.getString("Description"));
                 a.setLocation(rs.getString("Location"));
                 a.setContactId(rs.getInt("Contact_ID"));
+                a.setContact(String.valueOf(ContactDAO.getContactById(a.getContactId()).getContactName()));
                 a.setType(rs.getString("Type"));
                 a.setStart(rs.getTimestamp("Start").toLocalDateTime());
                 a.setEnd(rs.getTimestamp("End").toLocalDateTime());
@@ -138,7 +188,7 @@ public class AppointmentDAO {
         try {
             String choice = c;
             ZoneId localZoneId = ZoneId.of(TimeZone.getDefault().getID()); // Getting Local Timezone
-            ZoneId uctZoneId = ZoneId.of("UCT");
+            ZoneId uctZoneId = ZoneId.of("UTC");
 
             switch (c) {
                 case "start":
@@ -155,5 +205,25 @@ public class AppointmentDAO {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private static boolean isThisWeek(LocalDateTime time) {
+        ZoneId utc = ZoneId.of("UTC");
+        LocalDateTime now = LocalDateTime.now(utc);
+        LocalDateTime weekFromNow = LocalDateTime.now(utc).plusDays(7);
+        if (time.isAfter(now) && time.isBefore(weekFromNow)) {
+            return true;
+        }
+        else return false;
+    }
+
+    private static boolean isThisMonth(LocalDateTime time) {
+        ZoneId utc = ZoneId.of("UTC");
+        LocalDateTime now = LocalDateTime.now(utc);
+        LocalDateTime monthFromNow = LocalDateTime.now(utc).plusMonths(1);
+        if (time.isAfter(now) && time.isBefore(monthFromNow)) {
+            return true;
+        }
+        else return false;
     }
 }
