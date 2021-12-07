@@ -15,9 +15,9 @@ import model.Appointment;
 
 import java.io.IOException;
 import java.net.URL;
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.*;
 import java.util.ResourceBundle;
+import java.util.TimeZone;
 
 public class ModAppointment implements Initializable {
     public TextField modAppAppID;
@@ -55,15 +55,21 @@ public class ModAppointment implements Initializable {
         modAppLocation.setText(currentApp.getLocation());
         modAppType.setText(currentApp.getType());
         modAppContact.setValue(currentApp.getContact());
-        // Dates
-        LocalDate startDate = LocalDate.from(currentApp.getStart());
-        modAppDateBox.setValue(startDate);
-        LocalTime startTime = LocalTime.from(currentApp.getStart());
-        String startText = startTime.toString();
-        modAppStartTime.setValue(startText);
-        LocalTime endTime = LocalTime.from(currentApp.getEnd());
-        String endText = endTime.toString();
-        modAppEndTime.setValue(endText);
+        // Times
+        ZoneId localId = ZoneId.of(TimeZone.getDefault().getID());
+        ZoneId utcId = ZoneId.of("UTC");
+        LocalDateTime startDateTime = currentApp.getStart();
+        ZonedDateTime startTimeUtc = ZonedDateTime.of(startDateTime, utcId);
+        LocalDateTime startDateTimeLocal = startTimeUtc.withZoneSameInstant(localId).toLocalDateTime();
+        LocalTime convertedStartTime = LocalTime.from(startDateTimeLocal);
+        modAppStartTime.setValue(convertedStartTime.toString());
+        LocalDateTime endDateTime = currentApp.getEnd();
+        ZonedDateTime endTimeUtc = ZonedDateTime.of(endDateTime, utcId);
+        LocalDateTime endDateTimeLocal = endTimeUtc.withZoneSameInstant(localId).toLocalDateTime();
+        LocalTime convertedEndTime = LocalTime.from(endDateTimeLocal);
+        modAppEndTime.setValue(convertedEndTime.toString());
+        // Date
+        modAppDateBox.setValue(LocalDate.from(startDateTimeLocal));
     }
 
     public void onModAppExitButtonAction(ActionEvent event) throws IOException {

@@ -167,6 +167,7 @@ public class AppointmentDAO {
                 a.setContactId(rs.getInt("Contact_ID"));
                 a.setContact(String.valueOf(ContactDAO.getContactById(a.getContactId()).getContactName()));
                 a.setType(rs.getString("Type"));
+                // DO TIME CONVERSIONS HERE.
                 a.setStart(rs.getTimestamp("Start").toLocalDateTime());
                 a.setEnd(rs.getTimestamp("End").toLocalDateTime());
                 a.setCreateDate(rs.getTimestamp("Create_Date").toLocalDateTime());
