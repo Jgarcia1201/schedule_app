@@ -4,6 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 import model.Appointment;
+import model.Customer;
 import model.User;
 import utility.DBManager;
 import utility.DBQuery;
@@ -24,22 +25,15 @@ public class AppointmentDAO {
 
     public AppointmentDAO() {} // Constructor.
 
-    public static Appointment getAppointment(int id) {
-        try {
-            allApps = getAllApps();
-            for (Appointment app : allApps) {
-                if (app.getAppointmentId() == id) {
-                    return app;
-                }
-                else {
-                    throw new Exception();
-                }
+    public static ObservableList<Appointment> getCustomerAppointments(Customer c) {
+        ObservableList<Appointment> customerApps = FXCollections.observableArrayList();
+        allApps = getAllApps();
+        for (Appointment app : allApps) {
+            if (c.getCustomerId() == app.getCustomerId()) {
+                customerApps.add(app);
             }
         }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+        return customerApps;
     }
 
     public static ObservableList<Appointment> getMonthApps() {
@@ -244,8 +238,10 @@ public class AppointmentDAO {
             // Checking Overlap
             allApps = getAllApps();
             for (Appointment a : allApps) {
-                if (!startUtc.isBefore(a.getStart()) && endUtc.isBefore(a.getEnd())) {
-                    return "Overlap";
+                if (startUtc.isBefore(a.getEnd()) && endUtc.isAfter(a.getStart())) {
+                    if (a.getAppointmentId() != app.getAppointmentId()) {
+                        return "Overlap";
+                    }
                 }
             }
 

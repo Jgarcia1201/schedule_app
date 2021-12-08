@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="569.0" prefWidth="850.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.CustomerMenu">
+   <children>
+      <Pane prefHeight="80.0" prefWidth="873.0" style="-fx-background-color: black;">
+         <children>
+            <Label layoutX="327.0" layoutY="17.0" text="Customer Menu" textFill="WHITE">
+               <font>
+                  <Font size="31.0" />
+               </font>
+            </Label>
+         </children>
+      </Pane>
+      <TableView fx:id="customerMenuTable" layoutX="121.0" layoutY="100.0" onMouseClicked="#onCustomerTableClicked" prefHeight="222.0" prefWidth="631.0">
+        <columns>
+          <TableColumn fx:id="customerIDCol" editable="false" prefWidth="60.0" resizable="false" text="ID" />
+          <TableColumn fx:id="customerNameCol" prefWidth="141.0" resizable="false" text="Name" />
+            <TableColumn fx:id="customerAddCol" prefWidth="182.0" resizable="false" text="Address" />
+            <TableColumn fx:id="customerZipCol" prefWidth="107.0" resizable="false" text="Postal Code" />
+            <TableColumn fx:id="customerPhoneCol" prefWidth="140.0" resizable="false" text="Phone" />
+        </columns>
+      </TableView>
+      <Pane layoutX="64.0" layoutY="338.0" prefHeight="200.0" prefWidth="284.0" style="-fx-border-color: black; -fx-border-radius: 5;">
+         <children>
+            <Button fx:id="addCustomerButton" layoutX="60.0" layoutY="60.0" mnemonicParsing="false" onAction="#onAddCustomerAction" prefHeight="25.0" prefWidth="164.0" text="Add Customer" />
+            <Button layoutX="60.0" layoutY="94.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="164.0" text="Modify Customer" />
+            <Button layoutX="60.0" layoutY="129.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="164.0" text="Delete Customer" textFill="#d00000" />
+            <Pane prefHeight="46.0" prefWidth="284.0" style="-fx-background-color: black;">
+               <children>
+                  <Label layoutX="110.0" layoutY="10.0" text="Controls" textFill="WHITE">
+                     <font>
+                        <Font size="17.0" />
+                     </font>
+                  </Label>
+               </children>
+            </Pane>
+            <Button fx:id="returnToMainMenuButton" layoutX="60.0" layoutY="161.0" mnemonicParsing="false" onAction="#onReturnToMainMenuButtonAction" prefHeight="25.0" prefWidth="164.0" text="Return To Main Menu" />
+         </children>
+      </Pane>
+      <Pane layoutX="375.0" layoutY="338.0" prefHeight="200.0" prefWidth="446.0" style="-fx-border-color: black; -fx-border-radius: 5;">
+         <children>
+            <Pane prefHeight="46.0" prefWidth="446.0" style="-fx-background-color: black;">
+               <children>
+                  <Label layoutX="131.0" layoutY="10.0" text="Customer Appointments" textFill="WHITE">
+                     <font>
+                        <Font size="17.0" />
+                     </font>
+                  </Label>
+               </children>
+            </Pane>
+            <TableView fx:id="customerAppTable" layoutY="46.0" prefHeight="156.0" prefWidth="446.0" style="-fx-border-radius: 5; -fx-border-color: black;">
+              <columns>
+                <TableColumn fx:id="customerAppId" editable="false" prefWidth="34.0" resizable="false" text="ID" />
+                <TableColumn fx:id="customerAppName" editable="false" prefWidth="84.0" resizable="false" text="Title" />
+                  <TableColumn fx:id="customerAppLocation" editable="false" prefWidth="82.0" resizable="false" text="Location" />
+                  <TableColumn fx:id="customerAppStart" editable="false" prefWidth="89.0" resizable="false" text="Start" />
+                  <TableColumn fx:id="customerAppEnd" editable="false" prefWidth="82.0" resizable="false" text="End" />
+                  <TableColumn fx:id="customerAppContact" editable="false" prefWidth="79.0" resizable="false" text="Contact" />
+              </columns>
+            </TableView>
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>

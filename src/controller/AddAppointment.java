@@ -43,8 +43,8 @@ public class AddAppointment implements Initializable {
     public Button addAppExitButton;
     public Stage stage;
     public Scene scene;
-    private DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT);
-    private ObservableList<String> times = FXCollections.observableArrayList();
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT);
+    private final ObservableList<String> times = FXCollections.observableArrayList();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -121,10 +121,7 @@ public class AddAppointment implements Initializable {
                 alert.setHeaderText("Please Enter Values For All Text Fields");
                 alert.setContentText("Please Try Again");
                 alert.showAndWait();
-                addAppTitle.clear();
-                addAppDesc.clear();
-                addAppLocation.clear();
-                addAppType.clear();
+                return;
             }
             // Time
             LocalDateTime startTime = LocalDateTime.of(date, LocalTime.parse(start, formatter));
