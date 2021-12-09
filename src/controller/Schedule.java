@@ -76,7 +76,9 @@ public class Schedule implements Initializable {
         // Adding Event Listener to TabPane.
         allTabs.getSelectionModel().selectedItemProperty().addListener((v, oldValue, newValue) ->
                 handleChangeTab(newValue.getText())
-        );
+        ); // Lambda Expression used to Make Code More Readable. Otherwise, each tab would have a Listener added manually.
+
+        
 
         // Populating All Appointments Table
         appointments = AppointmentDAO.getAllApps();

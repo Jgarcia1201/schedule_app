@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 public class UserReport implements Initializable {
 
@@ -52,7 +53,7 @@ public class UserReport implements Initializable {
         allCustomers = CustomerDAO.getAllCustomers();
     }
 
-    private ObservableList<String> getUserNames(ObservableList<User> user){
+    private ObservableList<String> getUserNames(ObservableList<User> user) {
         ObservableList<String> toReturn = FXCollections.observableArrayList();
         for (User u : allUsers) {
             toReturn.add(u.getUserName());
@@ -62,36 +63,24 @@ public class UserReport implements Initializable {
 
     public void userComboBoxAction(ActionEvent event) {
         String choice = userComboBox.getValue();
-        userApps = getAppUpdatesByUser(choice);
+
+        // Using LAMBDA here improves readability and condensed the UserReport class by two length functions.
+        // Due to the small amount of Users, there isn't a need to write out two separate methods for doing such similar things
+        // at such similar times.
+        userApps = allApps.stream()
+                .filter(app -> app.getLastUpdatedBy().equals(choice))
+                .collect(Collectors.toCollection(FXCollections::observableArrayList));
         userAppTable.setItems(userApps);
         userAppTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
         userAppUpdate.setCellValueFactory(new PropertyValueFactory<>("displayLastUpdate"));
 
-        userCustomers = getCustomerUpdatesByUser(choice);
+        userCustomers = allCustomers.stream()
+                .filter(customer -> customer.getLastUpdatedBy().equals(choice))
+                .collect(Collectors.toCollection(FXCollections::observableArrayList));
         userCustomerTable.setItems(userCustomers);
         userCustomerName.setCellValueFactory(new PropertyValueFactory<>("name"));
         userCustomerUpdate.setCellValueFactory(new PropertyValueFactory<>("displayLastUpdate"));
 
-    }
-
-    public ObservableList<Customer> getCustomerUpdatesByUser(String s) {
-        ObservableList<Customer> toReturn = FXCollections.observableArrayList();
-        for (Customer c : allCustomers) {
-            if (c.getLastUpdatedBy().equals(s)) {
-                toReturn.add(c);
-            }
-        }
-        return toReturn;
-    }
-
-    private ObservableList<Appointment> getAppUpdatesByUser(String s) {
-        ObservableList<Appointment> toReturn = FXCollections.observableArrayList();
-        for (Appointment a : allApps) {
-            if (a.getLastUpdatedBy().equals(s)) {
-                toReturn.add(a);
-            }
-        }
-        return toReturn;
     }
 
     public void onUserReturn(ActionEvent event) throws IOException {
