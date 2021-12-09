@@ -7,10 +7,8 @@ import utility.DBManager;
 import utility.DBQuery;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 public class CountryDAO {
@@ -41,23 +39,17 @@ public class CountryDAO {
             }
         }
         catch (Exception e) {
-            System.out.println(e.getMessage());
+            // do nothing.
         }
         return allCountries;
     }
 
     public static Country getCountryByName(String s) {
-        allCountries = getAllCountries();
         for (Country c : allCountries) {
             if (c.getCountryName().equals(s)) {
                 return c;
             }
         }
         return null;
-    }
-
-    private LocalDateTime convertTime(LocalDateTime param) {
-        LocalDateTime converted;
-        return param;
     }
 }

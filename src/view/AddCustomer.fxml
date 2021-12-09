@@ -71,7 +71,8 @@
             <TextField fx:id="addCustomerStreet" layoutX="184.0" layoutY="15.0" />
          </children>
       </Pane>
-      <Button fx:id="addCustomerSave" layoutX="197.0" layoutY="453.0" mnemonicParsing="false" onAction="#onAddCustomerSave" prefHeight="25.0" prefWidth="82.0" text="Save" />
-      <Button fx:id="addCustomerCancel" layoutX="321.0" layoutY="453.0" mnemonicParsing="false" onAction="#onAddCustomerCancel" prefHeight="25.0" prefWidth="82.0" text="Cancel" />
+      <Button fx:id="addCustomerSave" layoutX="123.0" layoutY="453.0" mnemonicParsing="false" onAction="#onAddCustomerSave" prefHeight="25.0" prefWidth="116.0" text="Save" />
+      <Button fx:id="addCustomerCancel" layoutX="362.0" layoutY="453.0" mnemonicParsing="false" onAction="#onAddCustomerCancel" prefHeight="25.0" prefWidth="116.0" text="Main Menu" />
+      <Button fx:id="addCustomerContactMenu" layoutX="242.0" layoutY="453.0" mnemonicParsing="false" onAction="#onAddCustomerContactMenu" prefHeight="25.0" prefWidth="116.0" text="Customer Menu" />
    </children>
 </AnchorPane>

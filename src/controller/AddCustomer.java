@@ -42,7 +42,9 @@ public class AddCustomer implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        allDivs = DivisionDAO.getAllDivs();
         allCountries = CountryDAO.getAllCountries();
+
         ObservableList<String> countryNames = getCountryNames(allCountries);
         addCustomerCountry.setItems(countryNames);
 
@@ -114,8 +116,6 @@ public class AddCustomer implements Initializable {
         String selectedName = addCustomerCountry.getSelectionModel().getSelectedItem();
         Country selected = CountryDAO.getCountryByName(selectedName);
         ObservableList<String> divList = FXCollections.observableArrayList();
-        allDivs = DivisionDAO.getAllDivs();
-
         for (Division div : allDivs) {
             if (div.getCountryId() == selected.getCountryId()) {
                 divList.add(div.getDivName());
@@ -133,7 +133,7 @@ public class AddCustomer implements Initializable {
             addCustomerToggleLabel.setText("Province");
         }
         else {
-            addCustomerToggleLabel.setText("First Layer Division");
+            addCustomerToggleLabel.setText("First Level Division");
         }
     }
 
@@ -158,6 +158,16 @@ public class AddCustomer implements Initializable {
 
     public void onAddCustomerCancel(ActionEvent event) throws IOException {
         showMainMenu(event);
+    }
+
+    public void onAddCustomerContactMenu(ActionEvent event) throws IOException {
+        Stage stage;
+        Scene scene;
+        Parent root = FXMLLoader.load(getClass().getResource("/view/CustomerMenu.fxml"));
+        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
     }
 
     public void showMainMenu(ActionEvent event) throws IOException {

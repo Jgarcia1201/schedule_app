@@ -17,11 +17,13 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import model.Appointment;
 import model.User;
+import utility.Logger;
 
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.TextStyle;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -39,16 +41,27 @@ public class Login implements Initializable {
 
     public static User you = new User();
 
+    private String alertHeader;
+    private String alertTitle;
+    private String alertMessage;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         // Setting Language:
         ResourceBundle rb = ResourceBundle.getBundle("language/language", Locale.getDefault());
+        ZoneId userZone = ZoneId.systemDefault();
+        String displayZone = String.valueOf(userZone.getDisplayName(TextStyle.FULL_STANDALONE, Locale.getDefault()));
         loginTitle.setText(rb.getString("login.title"));
         loginSubtitle.setText(rb.getString("login.subtitle"));
         loginUsernameLabel.setText(rb.getString("login.username"));
         loginPasswordLabel.setText(rb.getString("login.password"));
         loginButton.setText(rb.getString("login.button"));
-        languageLabel.setText(rb.getString("login.language"));
+        languageLabel.setText(displayZone);
+
+        //Alert:
+        alertTitle = rb.getString("alertTitle");
+        alertHeader = rb.getString("alertHeader");
+        alertMessage = rb.getString("alertMessage");
     }
 
 
@@ -57,15 +70,13 @@ public class Login implements Initializable {
             if (checkLogin(you)) {
                 // Set Current User
                 you = UserDAO.getUserByName(userNameInput.getText());
-                System.out.println(you.getUserName());
                 // Show Schedule Page
+                Logger.logAttempt(userNameInput.getText(), true);
                 checkUpcomingApps();
                 showMainMenu(event);
             }
-            else if (userNameInput.getText().equals("") || passwordInput.getText().equals("")) {
-                showAlert("empty");
-            }
             else {
+                Logger.logAttempt(userNameInput.getText(), false);
                 showAlert("invalid password");
             }
         }
@@ -95,18 +106,12 @@ public class Login implements Initializable {
         return false;
     }
 
-    // TODO: SET LANGUAGE!!!
     private void showAlert(String a) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         if (a.equals("invalid password")) {
-            alert.setTitle("INVALID LOGIN CREDENTIALS");
-            alert.setHeaderText("You Have Entered an Invalid Username or Password!");
-            alert.setContentText("Please Try Again");
-        }
-        else if (a.equals("empty")) {
-            alert.setTitle("INVALID INPUT");
-            alert.setHeaderText("You Must Enter Values Into BOTH Fields!");
-            alert.setContentText("Please Try Again");
+            alert.setTitle(alertTitle);
+            alert.setHeaderText(alertHeader);
+            alert.setContentText(alertMessage);
         }
         alert.showAndWait();
         userNameInput.setText("");
@@ -132,19 +137,20 @@ public class Login implements Initializable {
             }
         }
         if (upcoming.size() > 0) {
-            String message = "Upcoming Appointments:";
+            String message = "Hello, " + you.getUserName() + " you have " + upcoming.size() + " Upcoming Appointments:";
             for (Appointment a : upcoming) {
-                if (upcoming.indexOf(a) + 1 == upcoming.size()) {
-                    message = message + " " + a.getTitle() + ".";
-                }
-                else {
-                    message = message + " " + a.getTitle() + ",";
-                }
+                    message = message + "\n" + a.getTitle() + ", Starting at: " + a.getDisplayStart();
             }
-            Alert alert = new Alert(Alert.AlertType.ERROR);
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("UPCOMING APPOINTMENT!");
             alert.setHeaderText("You Have " + upcoming.size() + " Upcoming Appointments Within 15 Minutes!");
             alert.setContentText(message);
+            alert.show();
+        }
+        else {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Pen Me In");
+            alert.setHeaderText("Hello " + you.getUserName() + ", You Have No Upcoming Appointments.");
             alert.show();
         }
     }

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ScheduleReport">
+   <children>
+      <Pane prefHeight="71.0" prefWidth="535.0" style="-fx-background-color: black;">
+         <children>
+            <Label layoutX="155.0" layoutY="13.0" text="Schedule Report" textFill="WHITE">
+               <font>
+                  <Font size="31.0" />
+               </font>
+            </Label>
+         </children>
+      </Pane>
+      <Pane layoutX="37.0" layoutY="146.0" prefHeight="151.0" prefWidth="200.0" style="-fx-border-color: black; -fx-border-radius: 5;">
+         <children>
+            <ComboBox fx:id="schedMonthComboBox" layoutX="25.0" layoutY="21.0" onAction="#onSchedMonthComboBoxAction" prefWidth="150.0" promptText="Choose Month" />
+            <Button layoutX="25.0" layoutY="106.0" mnemonicParsing="false" onAction="#onSchedReturn" prefHeight="25.0" prefWidth="150.0" text="Return to Schedule" />
+            <ComboBox fx:id="schedTypeComboBox" layoutX="25.0" layoutY="63.0" onAction="#onSchedTypeComboBoxAction" prefWidth="150.0" promptText="Choose Type" />
+         </children>
+      </Pane>
+      <TableView fx:id="schedTable" layoutX="259.0" layoutY="122.0" prefHeight="200.0" prefWidth="248.0">
+        <columns>
+          <TableColumn fx:id="schedCustomerId" prefWidth="124.0" text="Customer Name" />
+          <TableColumn fx:id="schedCount" prefWidth="123.0" text="Count" />
+        </columns>
+      </TableView>
+   </children>
+</AnchorPane>

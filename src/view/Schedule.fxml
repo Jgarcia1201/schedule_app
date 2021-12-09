@@ -76,8 +76,7 @@
           </Tab>
         </tabs>
       </TabPane>
-      <Button layoutX="1052.0" layoutY="15.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="78.0" text="User Log" />
-      <Button layoutX="956.0" layoutY="15.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="78.0" text="Reports" />
+      <Button layoutX="1013.0" layoutY="15.0" mnemonicParsing="false" onAction="#onScheduleReportAction" prefHeight="25.0" prefWidth="117.0" text="Schedule Report" />
       <Pane layoutY="59.0" prefHeight="591.0" prefWidth="177.0" style="-fx-background-color: dfdfdf;">
          <children>
             <Button fx:id="mainExitButton" layoutX="62.0" layoutY="552.0" mnemonicParsing="false" onAction="#onMainExitButtonAction" prefHeight="25.0" prefWidth="54.0" text="Exit" />
@@ -92,8 +91,8 @@
               </columns>
             </TableView>
              <Button fx:id="customerMenuButton" layoutX="25.0" layoutY="412.0" mnemonicParsing="false" onAction="#onCustomerMenuButtonAction" prefHeight="25.0" prefWidth="127.0" text="Customer Menu" />
-            <Button layoutX="25.0" layoutY="450.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="127.0" text="Add Customer" />
-            <Button layoutX="25.0" layoutY="488.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="127.0" text="Modify Customer" />
+            <Button fx:id="scheduleAddCustomer" layoutX="25.0" layoutY="450.0" mnemonicParsing="false" onAction="#onScheduleAddCustomerAction" prefHeight="25.0" prefWidth="127.0" text="Add Customer" />
+            <Button fx:id="mainModCustomerButton" layoutX="25.0" layoutY="488.0" mnemonicParsing="false" onAction="#onMainModCustomerButtonAction" prefHeight="25.0" prefWidth="127.0" text="Modify Customer" />
          </children>
       </Pane>
       <Label layoutX="19.0" layoutY="6.0" text="Pen Me In" textFill="WHITE">
@@ -101,5 +100,7 @@
             <Font name="Franklin Gothic Demi Cond" size="37.0" />
          </font>
       </Label>
+      <Button layoutX="883.0" layoutY="15.0" mnemonicParsing="false" onAction="#onContactReportAction" prefHeight="25.0" prefWidth="117.0" text="Contact Report" />
+      <Button layoutX="751.0" layoutY="15.0" mnemonicParsing="false" onAction="#onUserReportAction" prefHeight="25.0" prefWidth="117.0" text="User Report" />
    </children>
 </AnchorPane>

@@ -14,7 +14,6 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import model.Appointment;
-import model.Contact;
 import model.Customer;
 
 import java.io.IOException;
@@ -260,6 +259,14 @@ public class Schedule implements Initializable {
         }
     }
 
+    public void onScheduleAddCustomerAction(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("/view/AddCustomer.fxml"));
+        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+    }
+
     public void onCustomerMenuButtonAction(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/view/CustomerMenu.fxml"));
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
@@ -271,5 +278,65 @@ public class Schedule implements Initializable {
     public void onMainExitButtonAction(ActionEvent event) {
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         stage.close();
+    }
+
+    public void onMainModCustomerButtonAction(ActionEvent event) {
+        Stage stage;
+        Scene scene;
+        try {
+            Customer selected = customerTable.getSelectionModel().getSelectedItem();
+            if (selected.equals(null)) {
+                throw new Exception();
+            }
+            // Load Controller
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ModCustomer.fxml"));
+            Parent root = loader.load();
+            // Pass Data
+            ModCustomer mc = loader.getController();
+            mc.passCustomer(selected);
+            // Stage
+            stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+            scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        }
+         catch (Exception e) {
+             System.out.println(e.getMessage());
+             Alert alert = new Alert(Alert.AlertType.ERROR);
+             alert.setTitle("WARNING!!");
+             alert.setHeaderText("Select A Customer");
+             alert.setContentText("Please Select a Customer and Try Again");
+             alert.show();
+        }
+    }
+
+    public void onContactReportAction(ActionEvent event) throws IOException {
+        Stage stage;
+        Scene scene;
+        Parent root = FXMLLoader.load(getClass().getResource("/view/ContactReport.fxml"));
+        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    public void onUserReportAction(ActionEvent event) throws IOException {
+        Stage stage;
+        Scene scene;
+        Parent root = FXMLLoader.load(getClass().getResource("/view/UserReport.fxml"));
+        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    public void onScheduleReportAction(ActionEvent event) throws IOException {
+        Stage stage;
+        Scene scene;
+        Parent root = FXMLLoader.load(getClass().getResource("/view/ScheduleReport.fxml"));
+        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
     }
 }

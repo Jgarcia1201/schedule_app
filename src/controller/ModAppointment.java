@@ -157,10 +157,7 @@ public class ModAppointment implements Initializable {
                 alert.setHeaderText("Please Enter Values For All Text Fields");
                 alert.setContentText("Please Try Again");
                 alert.showAndWait();
-                modAppTitle.clear();
-                modAppDesc.clear();
-                modAppLocation.clear();
-                modAppType.clear();
+                return;
             }
             // Time
             LocalDateTime startTime = LocalDateTime.of(date, LocalTime.parse(start, formatter));

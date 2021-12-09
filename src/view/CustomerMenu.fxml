@@ -15,20 +15,21 @@
             </Label>
          </children>
       </Pane>
-      <TableView fx:id="customerMenuTable" layoutX="121.0" layoutY="100.0" onMouseClicked="#onCustomerTableClicked" prefHeight="222.0" prefWidth="631.0">
+      <TableView fx:id="customerMenuTable" layoutX="78.0" layoutY="96.0" onMouseClicked="#onCustomerTableClicked" prefHeight="222.0" prefWidth="717.0">
         <columns>
           <TableColumn fx:id="customerIDCol" editable="false" prefWidth="60.0" resizable="false" text="ID" />
           <TableColumn fx:id="customerNameCol" prefWidth="141.0" resizable="false" text="Name" />
             <TableColumn fx:id="customerAddCol" prefWidth="182.0" resizable="false" text="Address" />
             <TableColumn fx:id="customerZipCol" prefWidth="107.0" resizable="false" text="Postal Code" />
             <TableColumn fx:id="customerPhoneCol" prefWidth="140.0" resizable="false" text="Phone" />
+            <TableColumn fx:id="customerDivCol" prefWidth="85.0" resizable="false" text="Division ID" />
         </columns>
       </TableView>
       <Pane layoutX="64.0" layoutY="338.0" prefHeight="200.0" prefWidth="284.0" style="-fx-border-color: black; -fx-border-radius: 5;">
          <children>
             <Button fx:id="addCustomerButton" layoutX="60.0" layoutY="60.0" mnemonicParsing="false" onAction="#onAddCustomerAction" prefHeight="25.0" prefWidth="164.0" text="Add Customer" />
-            <Button layoutX="60.0" layoutY="94.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="164.0" text="Modify Customer" />
-            <Button layoutX="60.0" layoutY="129.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="164.0" text="Delete Customer" textFill="#d00000" />
+            <Button fx:id="customerModButton" layoutX="60.0" layoutY="94.0" mnemonicParsing="false" onAction="#customerModButtonAction" prefHeight="25.0" prefWidth="164.0" text="Modify Customer" />
+            <Button fx:id="customerMenuDeleteButton" layoutX="60.0" layoutY="129.0" mnemonicParsing="false" onAction="#onCustomerMenuDeleteButtonAction" prefHeight="25.0" prefWidth="164.0" text="Delete Customer" textFill="#d00000" />
             <Pane prefHeight="46.0" prefWidth="284.0" style="-fx-background-color: black;">
                <children>
                   <Label layoutX="110.0" layoutY="10.0" text="Controls" textFill="WHITE">

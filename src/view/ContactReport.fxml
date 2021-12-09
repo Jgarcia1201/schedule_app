@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="430.0" prefWidth="950.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ContactReport">
+   <children>
+      <Pane prefHeight="63.0" prefWidth="956.0" style="-fx-background-color: black;">
+         <children>
+            <Label layoutX="375.0" layoutY="9.0" text="Contact Report" textFill="WHITE">
+               <font>
+                  <Font size="31.0" />
+               </font>
+            </Label>
+         </children>
+      </Pane>
+      <Pane layoutX="378.0" layoutY="306.0" prefHeight="110.0" prefWidth="200.0" style="-fx-border-color: black; -fx-border-radius: 5;">
+         <children>
+            <ComboBox fx:id="contactComboBox" layoutX="25.0" layoutY="21.0" onAction="#contactComboBoxAction" prefWidth="150.0" promptText="Choose Contact" />
+            <Button layoutX="25.0" layoutY="64.0" mnemonicParsing="false" onAction="#onContactReturn" prefHeight="25.0" prefWidth="150.0" text="Return to Schedule" />
+         </children>
+      </Pane>
+      <TableView fx:id="contactAppTable" layoutX="28.0" layoutY="83.0" prefHeight="197.0" prefWidth="901.0">
+         <columns>
+            <TableColumn fx:id="contactAppID" prefWidth="49.0" resizable="false" text="ID" />
+            <TableColumn fx:id="contactAppTitle" prefWidth="69.0" resizable="false" text="Title" />
+            <TableColumn fx:id="contactAppDesc" prefWidth="125.0" resizable="false" text="Description" />
+            <TableColumn fx:id="contactAppLocation" prefWidth="88.0" resizable="false" text="Location" />
+            <TableColumn fx:id="contactAppContact" prefWidth="94.0" resizable="false" text="Contact" />
+            <TableColumn fx:id="contactAppType" prefWidth="107.0" resizable="false" text="Type" />
+            <TableColumn fx:id="contactAppStart" prefWidth="137.0" resizable="false" text="Start" />
+            <TableColumn fx:id="contactAppEnd" prefWidth="127.0" resizable="false" text="End" />
+            <TableColumn fx:id="contactAppCustomerId" prefWidth="104.0" resizable="false" text="Customer ID" />
+         </columns>
+      </TableView>
+   </children>
+</AnchorPane>

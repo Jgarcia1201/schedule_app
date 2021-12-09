@@ -39,6 +39,7 @@ public class CustomerDAO {
                 c.setCreatedBy(rs.getString("Created_By"));
                 c.setLastUpdate(rs.getTimestamp("Last_Update").toLocalDateTime());
                 c.setLastUpdatedBy(rs.getString("Last_Updated_By"));
+                c.setDisplayLastUpdate(rs.getTimestamp("Last_Update").toLocalDateTime());
                 c.setDivisionId(rs.getInt("Division_ID"));
                 // Address
                 c.setAddress(rs.getString("Address"));
@@ -77,6 +78,42 @@ public class CustomerDAO {
             throwables.printStackTrace();
         }
         return "Fail";
+    }
+
+    public static boolean updateCustomer(Customer c) {
+        String sql = "UPDATE customers SET Customer_Name = ?, Address = ?, Postal_Code = ?, Phone = ?," +
+                " Last_Update = ?, Last_Updated_By = ?, Division_ID = ? WHERE Customer_ID = ?";
+        try {
+            DBQuery.setPreparedStatement(conn, sql);
+            PreparedStatement ps = DBQuery.getPreparedStatement();
+            ps.setString(1, c.getName());
+            ps.setString(2, c.getAddress());
+            ps.setString(3, c.getPostalCode());
+            ps.setString(4, c.getPhone());
+            ps.setTimestamp(5, Timestamp.valueOf(c.getLastUpdate()));
+            ps.setString(6, c.getLastUpdatedBy());
+            ps.setInt(7, c.getDivisionId());
+            ps.setInt(8, c.getCustomerId());
+            ps.execute();
+            return true;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public static void deleteCustomer(Customer c) {
+        String sql = "DELETE FROM customers WHERE Customer_ID = ?";
+        try {
+            DBQuery.setPreparedStatement(conn, sql);
+            PreparedStatement ps = DBQuery.getPreparedStatement();
+            ps.setInt(1, c.getCustomerId());
+            ps.execute();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static Customer getCustomer(int id) {

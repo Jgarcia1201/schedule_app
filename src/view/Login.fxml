@@ -6,16 +6,21 @@
 
 <AnchorPane prefHeight="400.0" prefWidth="350.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.Login">
    <children>
-      <Label fx:id="loginTitle" layoutX="102.0" layoutY="36.0" text="login.title">
-         <font>
-            <Font size="33.0" />
-         </font></Label>
-      <Label fx:id="loginSubtitle" layoutX="114.0" layoutY="93.0" text="login.subtitle" />
+      <Pane layoutX="-1.0" layoutY="30.0" prefHeight="81.0" prefWidth="350.0">
+         <children>
+            <Label fx:id="loginSubtitle" alignment="CENTER" contentDisplay="CENTER" layoutX="7.0" layoutY="59.0" prefHeight="17.0" prefWidth="337.0" text="login.subtitle" textAlignment="CENTER" />
+            <Label fx:id="loginTitle" alignment="CENTER" contentDisplay="CENTER" prefHeight="49.0" prefWidth="350.0" text="login.title" textAlignment="CENTER">
+               <font>
+                  <Font size="33.0" />
+               </font>
+            </Label>
+         </children>
+      </Pane>
       <TextField fx:id="userNameInput" layoutX="101.0" layoutY="147.0" />
       <TextField fx:id="passwordInput" layoutX="101.0" layoutY="200.0" />
-      <Label fx:id="loginUsernameLabel" layoutX="100.0" layoutY="130.0" text="login.username" />
-      <Label fx:id="loginPasswordLabel" layoutX="102.0" layoutY="183.0" text="login.password" />
-      <Label fx:id="languageLabel" layoutX="157.0" layoutY="361.0" text="login.language" />
-      <Button fx:id="loginButton" layoutX="152.0" layoutY="245.0" mnemonicParsing="false" onAction="#onLogin" text="login.button" />
+      <Label fx:id="loginUsernameLabel" layoutX="100.0" layoutY="130.0" prefHeight="17.0" prefWidth="149.0" snapToPixel="false" text="login.username" />
+      <Label fx:id="loginPasswordLabel" layoutX="102.0" layoutY="183.0" prefHeight="17.0" prefWidth="149.0" text="login.password" />
+      <Label fx:id="languageLabel" alignment="CENTER" cacheShape="false" centerShape="false" contentDisplay="CENTER" focusTraversable="false" layoutX="47.0" layoutY="357.0" prefHeight="17.0" prefWidth="257.0" scaleShape="false" text="login.language" underline="true" />
+      <Button fx:id="loginButton" cacheShape="false" centerShape="false" focusTraversable="false" layoutX="134.0" layoutY="245.0" mnemonicParsing="false" onAction="#onLogin" scaleShape="false" text="login.button" textAlignment="CENTER" />
    </children>
 </AnchorPane>

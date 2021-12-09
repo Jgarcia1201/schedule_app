@@ -6,10 +6,16 @@ import javafx.collections.ObservableList;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.TimeZone;
 
 public class Customer {
     private int customerId;
     private String name;
+    private String street;
+    private String city;
     private String address;
     private String  postalCode;
     private String phone;
@@ -19,6 +25,9 @@ public class Customer {
     private LocalDateTime lastUpdate;
     private String lastUpdatedBy;
     private int divisionId;
+    private String displayLastUpdate;
+
+    String pattern = "MM/dd/yyyy hh:mm a";
 
     public int getCustomerId() {
         return customerId;
@@ -34,6 +43,22 @@ public class Customer {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getStreet() {
+        return street;
+    }
+
+    public void setStreet(String street) {
+        this.street = street;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 
     public String getAddress() {
@@ -107,4 +132,14 @@ public class Customer {
     public void setDivisionId(int divisionId) {
         this.divisionId = divisionId;
     }
+
+    public void setDisplayLastUpdate(LocalDateTime time) {
+        ZoneId utc = ZoneId.of("UTC");
+        ZoneId local = ZoneId.of(TimeZone.getDefault().getID());
+        ZonedDateTime utcTime = ZonedDateTime.of(time, utc);
+        LocalDateTime convertedTime = utcTime.withZoneSameInstant(local).toLocalDateTime();
+        this.displayLastUpdate = convertedTime.format(DateTimeFormatter.ofPattern(pattern));
+    }
+
+    public String getDisplayLastUpdate() { return displayLastUpdate; }
 }

@@ -101,7 +101,7 @@ public class AppointmentDAO {
             // Checking Overlap
             allApps = getAllApps();
             for (Appointment a : allApps) {
-                if (startUtc.isAfter(a.getStart()) && endUtc.isBefore(a.getEnd())) {
+                if (startUtc.isBefore(a.getEnd()) && endUtc.isAfter(a.getStart())) {
                     return "Overlap";
                 }
             }
@@ -135,7 +135,6 @@ public class AppointmentDAO {
         try {
             DBQuery.setPreparedStatement(conn, deleteStatement);
             PreparedStatement ps = DBQuery.getPreparedStatement();
-
             ps.setInt(1, app.getAppointmentId());
             ps.execute();
         }
@@ -169,6 +168,7 @@ public class AppointmentDAO {
                 a.setCreateDate(rs.getTimestamp("Create_Date").toLocalDateTime());
                 a.setCreatedBy(rs.getString("Created_By"));
                 a.setLastUpdate(rs.getTimestamp("Last_Update").toLocalDateTime());
+                a.setDisplayLastUpdate(rs.getTimestamp("Last_Update").toLocalDateTime());
                 a.setLastUpdatedBy(rs.getString("Last_Updated_By"));
                 a.setCustomerId(rs.getInt("Customer_ID"));
                 a.setUserId(rs.getInt("User_ID"));
@@ -261,7 +261,6 @@ public class AppointmentDAO {
             ps.setInt(13, app.getContactId());
             ps.setInt(14, app.getAppointmentId());
             ps.execute();
-            allApps.clear();
             allApps = getAllApps();
             return "Success";
 

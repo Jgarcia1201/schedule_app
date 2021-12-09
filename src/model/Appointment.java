@@ -20,6 +20,7 @@ public class Appointment {
     private LocalDateTime createDate;
     private String createdBy;
     private LocalDateTime lastUpdate;
+    private String displayLastUpdate;
     private String lastUpdatedBy;
     private int CustomerId;
     private int userId;
@@ -169,6 +170,18 @@ public class Appointment {
 
     public String getDisplayEnd() {
         return displayEnd;
+    }
+
+    public void setDisplayLastUpdate(LocalDateTime time) {
+        ZoneId utc = ZoneId.of("UTC");
+        ZoneId local = ZoneId.of(TimeZone.getDefault().getID());
+        ZonedDateTime utcTime = ZonedDateTime.of(time, utc);
+        LocalDateTime convertedTime = utcTime.withZoneSameInstant(local).toLocalDateTime();
+        this.displayLastUpdate = convertedTime.format(DateTimeFormatter.ofPattern(pattern));
+    }
+
+    public String getDisplayLastUpdate() {
+        return displayLastUpdate;
     }
 
 
