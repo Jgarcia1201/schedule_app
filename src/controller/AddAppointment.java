@@ -101,9 +101,18 @@ public class AddAppointment implements Initializable {
             String createdBy = Login.you.getUserName();
             LocalDateTime lastUpdate = LocalDateTime.now();
             String lastUpdatedBy = Login.you.getUserName();
-            String userChoice = addAppUser.getSelectionModel().getSelectedItem();
+            String userChoice = addAppUser.getValue();
+            String customerChoice = addAppCustomer.getValue();
+            // Checking For Blanks.
+            if (title.equals("") || description.equals("") || location.equals("") || type.equals("") || userChoice == null || customerChoice == null) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("INVALID INPUTS");
+                alert.setHeaderText("Please Enter Values For All Text Fields");
+                alert.setContentText("Please Try Again");
+                alert.showAndWait();
+                return;
+            }
             User selectedUser = UserDAO.getUserByName(userChoice);
-            String customerChoice = addAppCustomer.getSelectionModel().getSelectedItem();
             Customer selectedCustomer = CustomerDAO.getCustomerByName(customerChoice);
             int CustomerId = selectedCustomer.getCustomerId();
             int userId = selectedUser.getUserId();
@@ -115,7 +124,7 @@ public class AddAppointment implements Initializable {
             String contact = contactChoice.getContactName();
 
             // Checking For Blanks.
-            if (title.equals("") || description.equals("") || location.equals("") || type.equals(""))    {
+            if (title.equals("") || description.equals("") || location.equals("") || type.equals("") || userChoice.equals(null) || customerChoice.equals(null)) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("INVALID INPUTS");
                 alert.setHeaderText("Please Enter Values For All Text Fields");

@@ -66,7 +66,7 @@ public class UserReport implements Initializable {
 
         // Using LAMBDA here improves readability and condensed the UserReport class by two length functions.
         // Due to the small amount of Users, there isn't a need to write out two separate methods for doing such similar things
-        // at such similar times.
+        // at the same time.
         userApps = allApps.stream()
                 .filter(app -> app.getLastUpdatedBy().equals(choice))
                 .collect(Collectors.toCollection(FXCollections::observableArrayList));

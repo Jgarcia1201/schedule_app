@@ -8,7 +8,7 @@ import java.time.Instant;
 
 public class Logger {
 
-    private static final String fileName = "log.txt";
+    private static final String fileName = "login_activity.txt";
 
     public Logger() {}
 
