@@ -39,6 +39,15 @@ public class ContactReport implements Initializable {
     private ObservableList<Contact> allContacts = FXCollections.observableArrayList();
     private ObservableList<Appointment> allApps = FXCollections.observableArrayList();
 
+    /**
+     * <p>
+     *     Two observable list are created and assigned the values returned from getAllContacts and getAllApps respectively.
+     * </p>
+     * <p>
+     *     An observable list of strings is obtained by calling the getContactNames with allContacts passed as a parameter
+     *      and the list is set to display in the contact ComboBox.
+     * </p>
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         allContacts = ContactDAO.getAllContacts();
@@ -48,6 +57,14 @@ public class ContactReport implements Initializable {
         contactComboBox.setItems(contactNames);
     }
 
+    /**
+     * <p>
+     *     When the contactComboBox is clicked, the user's choice is stored in a String. The Contact of the same name is
+     *     the retrieved using the getContactByName function with the user's selected passed as a parameter. The Contact is then
+     *     passed as a parameter into getAppsByContact which returns an Observable List which is then displayed in the contactAppTable
+     *     Table View.
+     * </p>
+     */
     public void contactComboBoxAction() {
         String choice = contactComboBox.getValue();
         Contact chosenOne = getContactByName(choice);
@@ -64,6 +81,13 @@ public class ContactReport implements Initializable {
         contactAppCustomerId.setCellValueFactory(new PropertyValueFactory<>("customerId"));
     }
 
+    /**
+     * Every Contact's name value in allContacts is compared to the String provided by the parameter. When a match is found,
+     * the Contact object is returned.
+     *
+     * @param s - String value, Contact's name.
+     * @return Contact with matching name value.
+     */
     private Contact getContactByName(String s) {
         for (Contact c : allContacts) {
             if (c.getContactName().equals(s)) {
@@ -73,6 +97,13 @@ public class ContactReport implements Initializable {
         return null;
     }
 
+    /**
+     * An observable list is created to store all Appointments with matching ContactIds.
+     * Every Appointment's contactId is checked against the parameter and when a match is found, it is added to the Observable list.
+     *
+     * @param c - Contact of desired appointments.
+     * @return - Observable List containing all Appointment objects with matching Contact IDs.
+     */
     private ObservableList<Appointment> getAppsByContact(Contact c) {
         ObservableList<Appointment> toReturn = FXCollections.observableArrayList();
         for (Appointment app : allApps) {
@@ -83,6 +114,13 @@ public class ContactReport implements Initializable {
         return toReturn;
     }
 
+    /**
+     * An observable list is created to store all Contact's name values.
+     * Every Contact's getContactName() is called and the value is added to the Observable List.
+     *
+     * @param list - Observable list of Contact objects.
+     * @return - Observable List containing all name values of parameter list.
+     */
     private ObservableList<String> getContactNames(ObservableList<Contact> list) {
         ObservableList<String> toReturn = FXCollections.observableArrayList();
         for (Contact c : list) {
@@ -92,6 +130,11 @@ public class ContactReport implements Initializable {
     }
 
 
+    /**
+     * Returns the user to the Main Menu. (Schedule.)
+     *
+     * @param event - click on return to schedule button.
+     */
     public void onContactReturn(ActionEvent event) throws IOException {
         Stage stage;
         Scene scene;

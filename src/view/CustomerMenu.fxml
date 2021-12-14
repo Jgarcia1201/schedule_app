@@ -18,10 +18,10 @@
       <TableView fx:id="customerMenuTable" layoutX="78.0" layoutY="96.0" onMouseClicked="#onCustomerTableClicked" prefHeight="222.0" prefWidth="717.0">
         <columns>
           <TableColumn fx:id="customerIDCol" editable="false" prefWidth="60.0" resizable="false" text="ID" />
-          <TableColumn fx:id="customerNameCol" prefWidth="141.0" resizable="false" text="Name" />
-            <TableColumn fx:id="customerAddCol" prefWidth="182.0" resizable="false" text="Address" />
-            <TableColumn fx:id="customerZipCol" prefWidth="107.0" resizable="false" text="Postal Code" />
-            <TableColumn fx:id="customerPhoneCol" prefWidth="140.0" resizable="false" text="Phone" />
+          <TableColumn fx:id="customerNameCol" prefWidth="122.0" resizable="false" text="Name" />
+            <TableColumn fx:id="customerAddCol" prefWidth="233.0" resizable="false" text="Address" />
+            <TableColumn fx:id="customerZipCol" prefWidth="98.0" resizable="false" text="Postal Code" />
+            <TableColumn fx:id="customerPhoneCol" prefWidth="117.0" resizable="false" text="Phone" />
             <TableColumn fx:id="customerDivCol" prefWidth="85.0" resizable="false" text="Division ID" />
         </columns>
       </TableView>

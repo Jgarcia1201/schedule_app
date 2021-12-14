@@ -43,6 +43,12 @@ public class UserReport implements Initializable {
     ObservableList<Appointment> userApps = FXCollections.observableArrayList();
     ObservableList<Customer> userCustomers = FXCollections.observableArrayList();
 
+    /**
+     * Observable Lists containing all Users, Appointments, and Contacts are created.
+     * <p>
+     *     The User's names values are extracted using getUserNames() and set to display in the User combo box.
+     * </p>
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         allUsers = UserDAO.getAllUsers();
@@ -53,6 +59,14 @@ public class UserReport implements Initializable {
         allCustomers = CustomerDAO.getAllCustomers();
     }
 
+    /**
+     * An observable list to return is created.
+     * <p>
+     *     Every User is then iterated through and name values are added to the Observable List.
+     * </p>
+     * @param user - An observable list of User objects.
+     * @return - An observable list containing the name values of all Objects in the parameter.
+     */
     private ObservableList<String> getUserNames(ObservableList<User> user) {
         ObservableList<String> toReturn = FXCollections.observableArrayList();
         for (User u : allUsers) {
@@ -61,28 +75,41 @@ public class UserReport implements Initializable {
         return toReturn;
     }
 
+    /**
+     * <p>
+     *     LAMBDA JUSTIFICATION - Using LAMBDA here improves readability and condensed the UserReport class by two functions.
+     *     Due to the small amount of Users, there isn't a need to write out two separate methods for doing such similar things
+     *     at the same time.
+     * </p>
+     * <p>
+     *     The observable list obtained by the lambda functions are set to display on their respective Table Views.
+     * </p>
+     *
+     * @param event - click on User Combo Box.
+     */
     public void userComboBoxAction(ActionEvent event) {
         String choice = userComboBox.getValue();
 
-        // Using LAMBDA here improves readability and condensed the UserReport class by two length functions.
-        // Due to the small amount of Users, there isn't a need to write out two separate methods for doing such similar things
-        // at the same time.
         userApps = allApps.stream()
                 .filter(app -> app.getLastUpdatedBy().equals(choice))
-                .collect(Collectors.toCollection(FXCollections::observableArrayList));
+                .collect(Collectors.toCollection(FXCollections::observableArrayList)); // LAMBDA 1
         userAppTable.setItems(userApps);
         userAppTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
         userAppUpdate.setCellValueFactory(new PropertyValueFactory<>("displayLastUpdate"));
 
         userCustomers = allCustomers.stream()
                 .filter(customer -> customer.getLastUpdatedBy().equals(choice))
-                .collect(Collectors.toCollection(FXCollections::observableArrayList));
+                .collect(Collectors.toCollection(FXCollections::observableArrayList)); // LAMBDA 2
         userCustomerTable.setItems(userCustomers);
         userCustomerName.setCellValueFactory(new PropertyValueFactory<>("name"));
         userCustomerUpdate.setCellValueFactory(new PropertyValueFactory<>("displayLastUpdate"));
 
     }
 
+    /**
+     * User is returned to Main Menu. (Schedule)
+     * @param event - click on return to menu button.
+     */
     public void onUserReturn(ActionEvent event) throws IOException {
         Stage stage;
         Scene scene;

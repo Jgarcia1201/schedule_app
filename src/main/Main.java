@@ -1,3 +1,7 @@
+/**
+ * @author James Garcia.
+ */
+
 package main;
 
 import javafx.application.Application;

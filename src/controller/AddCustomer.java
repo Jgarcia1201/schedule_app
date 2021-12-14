@@ -19,7 +19,6 @@ import model.Division;
 
 import java.io.IOException;
 import java.net.URL;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ResourceBundle;
 
@@ -40,6 +39,19 @@ public class AddCustomer implements Initializable {
     private ObservableList<Country> allCountries = FXCollections.observableArrayList();
     private ObservableList<Division> allDivs = FXCollections.observableArrayList();
 
+    /**
+     * <p>
+     *    Two observable lists are created holding all first level divisions and countries for use throughout the method.
+     *    To ensure that these function calls are only called once.
+     * </p>
+     * <p>
+     *     An observable list is then created using the local method, getCountryNames().
+     *     This list is then set to display in the country combo box.
+     * </p>
+     * <p>
+     *     An ID is generated using an Atomic Integer, and filled in to the uneditable CustomerID text field.
+     * </p>
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         allDivs = DivisionDAO.getAllDivs();
@@ -54,8 +66,25 @@ public class AddCustomer implements Initializable {
         addCustomerId.setText(String.valueOf(customerId));
     }
 
+    /**
+     * <p>
+     *     Triggered by an action performed on the button reading "Save".
+     *      Variables are created and used to store the values of the controller's text fields and combo boxes.
+     * </p>
+     * <p>
+     *     Validation is performed on the variables ensuring valid input from user.
+     *     A Customer class is created from the user's inputs and is inserted using the CustomerDAO method:
+     *     insertCustomer()
+     * </p>
+     * <p>
+     *     insertCustomer() returns a boolean value indicating either a successful INSERT statement into the Database
+     *     or a failure to do so.
+     * </p>
+     * @param event - click on the Save button.
+     */
     public void onAddCustomerSave(ActionEvent event) {
         try {
+            String displayAddress;
             int customerId = CustomerDAO.customerIdGen.getAndIncrement();
             String name = addCustomerName.getText();
             String phone = addCustomerPhone.getText();
@@ -80,7 +109,12 @@ public class AddCustomer implements Initializable {
             // Getting Division Id
             int divId = DivisionDAO.getDivIdFromName(div);
             // Assembling Addresses
-            String displayAddress = street + ", " + city;
+            if (country.equals("UK")) {
+                displayAddress = street + ", " + city + ", " + div + ", " + country;
+            }
+            else {
+                displayAddress = street + ", " + city;
+            }
 
             Customer newCustomer = new Customer();
             newCustomer.setCustomerId(customerId);
@@ -88,7 +122,6 @@ public class AddCustomer implements Initializable {
             newCustomer.setPhone(phone);
             newCustomer.setPostalCode(postal);
             newCustomer.setAddress(displayAddress);
-            newCustomer.setCountry(country);
             newCustomer.setDivisionId(divId);
             newCustomer.setLastUpdatedBy(lastUpdateBy);
             newCustomer.setLastUpdate(lastUpdate);
@@ -104,6 +137,14 @@ public class AddCustomer implements Initializable {
         }
     }
 
+    /**
+     * An observable list to hold the String values of every Country item in allCountries is created.
+     * Each Country's getCountryName() method is called and the returning value is added to the observable list and
+     * returned.
+     *
+     * @param countries - ObservableList containing Country instances.
+     * @return
+     */
     public ObservableList<String> getCountryNames(ObservableList<Country> countries) {
         ObservableList<String> countryNames = FXCollections.observableArrayList();
         for (Country c : countries) {
@@ -112,17 +153,25 @@ public class AddCustomer implements Initializable {
         return countryNames;
     }
 
+    /**
+     * <p>
+     *     When the a country is selected using the countries combo box, the String value obtained is used in the function call
+     *     CountryDAO.getCountryByName(). This function returns a country based of the String parameter provided.
+     * </p>
+     * <p>
+     *     An observable list is the created using the local method getDivNamesByCountry().
+     *     this list is set to display in the combo box intended to display first level divisions.
+     * </p>
+     * <p>
+     *     Label is then toggled depending on Country selection.
+     * </p>
+     */
     public void onAddCustomerCountryAction() {
         String selectedName = addCustomerCountry.getSelectionModel().getSelectedItem();
         Country selected = CountryDAO.getCountryByName(selectedName);
-        ObservableList<String> divList = FXCollections.observableArrayList();
-        for (Division div : allDivs) {
-            if (div.getCountryId() == selected.getCountryId()) {
-                divList.add(div.getDivName());
-            }
-        }
+        ObservableList<String> divList = getDivNamesByCountry(selected);
         addCustomerToggle.setItems(divList);
-
+        // Toggle Label
         if (selectedName.equals("U.S")) {
             addCustomerToggleLabel.setText("State");
         }
@@ -137,29 +186,35 @@ public class AddCustomer implements Initializable {
         }
     }
 
-    public ObservableList<Division> getDivsByCountryId(int id) {
-        ObservableList<Division> resultDivs = FXCollections.observableArrayList();
-        allDivs = DivisionDAO.getAllDivs();
-        for (Division div : allDivs) {
-            if (div.getCountryId() == id) {
-                resultDivs.add(div);
+    /**
+     * <p>
+     *     An observable list is created to hold the names of matching Division.
+     * </p>
+     * <p>
+     *     In allDivs, every Division's Country Id is compared against the return value of the parameter's getCountryId() method.
+     *     If the two values are equal to each other, the current Division's name will be added to the list to return.
+     * </p>
+     * @param country - country. country.getCountryId() will be accessed
+     * @return an Observable List containing String values obtained from all relevant Divisions.
+     */
+    private ObservableList<String> getDivNamesByCountry(Country country) {
+        ObservableList<String> toReturn = FXCollections.observableArrayList();
+        for (Division d: allDivs) {
+            if (country.getCountryId() == d.getCountryId()) {
+                toReturn.add(d.getDivName());
             }
         }
-        return resultDivs;
-    }
-
-    public ObservableList<String> getDivNames(ObservableList<Division> d) {
-        ObservableList<String> divNames = FXCollections.observableArrayList();
-        for (Division div : d) {
-            divNames.add(div.getDivName());
-        }
-        return divNames;
+        return toReturn;
     }
 
     public void onAddCustomerCancel(ActionEvent event) throws IOException {
         showMainMenu(event);
     }
 
+    /**
+     * Returns program to CustomerMenu.
+     * @param event - click on Customer Menu Button
+     */
     public void onAddCustomerContactMenu(ActionEvent event) throws IOException {
         Stage stage;
         Scene scene;

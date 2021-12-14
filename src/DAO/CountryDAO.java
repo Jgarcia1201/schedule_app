@@ -18,6 +18,15 @@ public class CountryDAO {
     private static ZoneId utc = ZoneId.of("UTC");
     private static ObservableList<Country> allCountries = FXCollections.observableArrayList();
 
+    /**
+     * A SQL statement is assigned to a String variable and the allCountries observable list is cleared to ensure correct data.
+     * <p>
+     *     The statement is executed and while rs.next() is true, a new Country is created out of the values found in the
+     *     columns of the database. These are added one by one to allCountries and returned.
+     * </p>
+     *
+     * @return - an observable list containing allCountries in the database.
+     */
     public static ObservableList<Country> getAllCountries() {
         String sqlStatement = "SELECT * FROM countries";
         allCountries.clear();
@@ -44,6 +53,11 @@ public class CountryDAO {
         return allCountries;
     }
 
+    /**
+     * Checks every Country's name against string specified in parameter. If a match is found, the User is returned.
+     * @param s - String, name of desired Country.
+     * @return desired Country.
+     */
     public static Country getCountryByName(String s) {
         for (Country c : allCountries) {
             if (c.getCountryName().equals(s)) {

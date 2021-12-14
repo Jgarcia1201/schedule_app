@@ -19,14 +19,12 @@ import javafx.stage.Stage;
 import model.Appointment;
 import model.Customer;
 
-import javax.swing.*;
-import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.net.URL;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.ResourceBundle;
+
 
 public class CustomerMenu implements Initializable {
     public TableView<Customer> customerMenuTable;
@@ -47,6 +45,11 @@ public class CustomerMenu implements Initializable {
     ObservableList<Customer> allCustomers = FXCollections.observableArrayList();
     ObservableList<Appointment> customerApps = FXCollections.observableArrayList();
 
+    /**
+     * allCustomers is set to all customers in the database. Calling during the initializing period allows minimization of
+     * Database function calls.
+     * The allCustomers list and it's values are then set to display in the customerMenuTable.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         allCustomers = CustomerDAO.getAllCustomers();
@@ -59,6 +62,17 @@ public class CustomerMenu implements Initializable {
         customerDivCol.setCellValueFactory(new PropertyValueFactory<>("divisionId"));
     }
 
+    /**
+     * <p>
+     *     Activated when the TableView customerMenuTable is clicked.
+     *     The function the attempts to create a Customer from the selected value.
+     *      If there is no Customer selected, the function returns without doing anything.
+     * </p>
+     * <p>
+     *     If a Customer is successfully created, customerApps is then assigned a value using AppointmentDAO.getCustomerAppointments()
+     *     this list is then set to display in the customerAppTable TableView.
+     * </p>
+     */
     public void onCustomerTableClicked() {
         Customer selected = customerMenuTable.getSelectionModel().getSelectedItem();
         if (selected == null) {
@@ -80,6 +94,10 @@ public class CustomerMenu implements Initializable {
         }
     }
 
+    /**
+     * Loads and displayds Schedule controller and view.
+     * @param event - click on Return To Menu Button.
+     */
     public void onReturnToMainMenuButtonAction(ActionEvent event) throws IOException {
         Stage stage;
         Scene scene;
@@ -90,6 +108,10 @@ public class CustomerMenu implements Initializable {
         stage.show();
     }
 
+    /**
+     * Loads and displays AddCustomer controller and view.
+     * @param event - Click on Add Customer Button.
+     */
     public void onAddCustomerAction(ActionEvent event) throws IOException {
         Stage stage;
         Scene scene;
@@ -100,6 +122,16 @@ public class CustomerMenu implements Initializable {
         stage.show();
     }
 
+    /**
+     * <p>
+     *     Attempts to create a Customer. If unsuccessful an alert is shown, instructing the user to select a customer and try again
+     * </p>
+     * <p>
+     *     If the attempt was successful, the ModCustomer controller is loaded and the selected Customer is passed through the passCustomer() method
+     *     and the ModCustomer view is displayed.
+     * </p>
+     * @param event - Click on the Modify Customer Button.
+     */
     public void customerModButtonAction(ActionEvent event) throws IOException {
         Stage stage;
         Scene scene;
@@ -130,6 +162,21 @@ public class CustomerMenu implements Initializable {
         }
     }
 
+    /**
+     * <p>
+     *     Attempts to create a Customer based off user selection. If unsuccessful, the function returns without doing anything.
+     * </p>
+     * <p>
+     *     If successful, the current size of customerApps is checked. If it is non empty, the customer has existing appointments and
+     *     cannot be deleted. In this case, an alert is displayed informing the user.
+     * </p>
+     * <p>
+     *     If currentApps is empty, a confirmation alert is shown verifying the user's desire to delete the selected Customer.
+     *     If the user selects Okay, a DELETE statement is then preformed on the Database, and the Customer is removed from the
+     *     Database as well as the allCustomers Observable List.
+     * </p>
+     * @param event - click on Delete Customer Button.
+     */
     public void onCustomerMenuDeleteButtonAction(ActionEvent event) {
         Customer selected = customerMenuTable.getSelectionModel().getSelectedItem();
         if (selected == null) {

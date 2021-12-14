@@ -45,6 +45,12 @@ public class Login implements Initializable {
     private String alertTitle;
     private String alertMessage;
 
+    /**
+     * A ResourceBundle sets the language depending on the user's language setting and retrieves the translations form the
+     * language file found in src/language. Text to be shown on the screen is then translated based off the user's Locale
+     * and current timezone.
+     *
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         // Setting Language:
@@ -64,7 +70,20 @@ public class Login implements Initializable {
         alertMessage = rb.getString("alertMessage");
     }
 
-
+    /**
+     * <p>
+     *     Calls checkLogin and passes the User object you created earlier in class.
+     * </p>
+     * <p>
+     *     If the login attempt returns successful, a Logger writes
+     *     the attempted login to the file "login_activity.txt". Upcoming Appointments are checked, and the main menu is shown.
+     * </p>
+     * <p>
+     *     if the login attempt returns unsuccessful, a Logger writes the attempted login to the file "login_activity.txt"
+     *     and the "invalid password" alert is shown.
+     * </p>
+     * @param event - click on Login Button.
+     */
     public void onLogin(ActionEvent event) {
         try {
             if (checkLogin(you)) {
@@ -77,7 +96,7 @@ public class Login implements Initializable {
             }
             else {
                 Logger.logAttempt(userNameInput.getText(), false);
-                showAlert("invalid password");
+                showAlert();
             }
         }
         catch (Exception e) {
@@ -85,6 +104,19 @@ public class Login implements Initializable {
         }
     }
 
+    /**
+     * <p>
+     *     An observable list containing all Users is created by calling getAllUsers() from UserDAO.
+     * </p>
+     * <p>
+     *     Variables are created and assigned values from their respective text fields.
+     *     The variables are then checked against every userName and password in the database.
+     *     If there is a match the function returns true. If no match is found, the function returns false.
+     * </p>
+     *
+     * @param user - user Class - see model.User
+     * @return boolean: true if login was successful, false if unsuccessful.
+     */
     private boolean checkLogin(User user) {
         try {
             ObservableList<User> allUsers = UserDAO.getAllUsers();
@@ -101,18 +133,20 @@ public class Login implements Initializable {
             }
         }
         catch (Exception e) {
-            System.out.println("Incorrect");
+            // do nothing. return false.
         }
         return false;
     }
 
-    private void showAlert(String a) {
+    /**
+     * Shows alert in language specified during initialization for invalid username and/or password.
+     *
+     */
+    private void showAlert() {
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        if (a.equals("invalid password")) {
-            alert.setTitle(alertTitle);
-            alert.setHeaderText(alertHeader);
-            alert.setContentText(alertMessage);
-        }
+        alert.setTitle(alertTitle);
+        alert.setHeaderText(alertHeader);
+        alert.setContentText(alertMessage);
         alert.showAndWait();
         userNameInput.setText("");
         passwordInput.setText("");
@@ -126,6 +160,21 @@ public class Login implements Initializable {
         stage.show();
     }
 
+
+    /**
+     * <p>
+     *     Creates two observable list to hold all Appointments and the Appointments that match the upcoming criteria.
+     *     All times are converted to UTC to be compared to each other to ensure that function works in any timezone.
+     *     Every Appointment's start time is then checked and added to upcoming appointments, if the start time is within
+     *     15 minutes.
+     *
+     * </p>
+     * <p>
+     *     If there are any upcoming appointments, and alert containing the appointments names, and start times is shown.
+     *     If there are no upcoming appointments, an alert is shown alerting the user.
+     * </p>
+     *
+     */
     public void checkUpcomingApps() {
         ObservableList<Appointment> apps = AppointmentDAO.getAllApps();
         ObservableList<Appointment> upcoming = FXCollections.observableArrayList();

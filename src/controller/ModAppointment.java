@@ -21,12 +21,9 @@ import model.User;
 
 import java.io.IOException;
 import java.net.URL;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
-import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.TimeZone;
 
@@ -46,13 +43,38 @@ public class ModAppointment implements Initializable {
     public ComboBox<String> modAppEndTime;
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT);
     private ObservableList<String> times = FXCollections.observableArrayList();
+    private ObservableList<Contact> contacts = FXCollections.observableArrayList();
+    private ObservableList<User> allUsers = FXCollections.observableArrayList();
+    private ObservableList<Customer> allCustomer = FXCollections.observableArrayList();
     Stage stage;
     Scene scene;
 
     Appointment currentApp = new Appointment();
 
+    /**
+     * <p>
+     *     Observable List are populated with all Contacts, all Users, and all Customers. Limiting calls to the Database.
+     * </p>
+     *<p>
+     *     A LocalTime is created an initialized to 12AM. A for loop adds a new time 30 minutes in the future. This value is added to the
+     *     times Observable List and then displayed in the start and end time combo boxes.
+     *</p>
+     * <p>
+     *     The contactNames observable list is populated with the names values of allContacts and then displayed in the contact Combo box.
+     * </p>
+     * <p>
+     *     The allUserNames observable list is populated with the name values of allUsers and then displayed in the User combo box.
+     * </p>
+     * <p>
+     *     the customerNames observable list is populated with the name values of allCustomers and then displayed in the Customer combo box.
+     * </p>
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        contacts = ContactDAO.getAllContacts();
+        allUsers = UserDAO.getAllUsers();
+        allCustomer = CustomerDAO.getAllCustomers();
+
         // Time Combo Boxes
         LocalTime hours = LocalTime.MIN.plusHours(0);
         for (int i = 0; i <= 48; i++) {
@@ -62,31 +84,50 @@ public class ModAppointment implements Initializable {
         modAppStartTime.setItems(times);
         modAppEndTime.setItems(times);
         // Contact Combo Box
-        ObservableList<Contact> contacts = ContactDAO.getAllContacts();
-        ObservableList<String> contactNames = FXCollections.observableArrayList();
-        for (Contact c : contacts) {
-            String name = c.getContactName();
-            contactNames.add(name);
-        }
+        ObservableList<String> contactNames = getContactNames(contacts);
         modAppContact.setItems(contactNames);
-
         // User Choice Box
-        ObservableList<User> allUsers = UserDAO.getAllUsers();
-        ObservableList<String> allUserNames = FXCollections.observableArrayList();
-        for (User u: allUsers) {
-            allUserNames.add(u.getUserName());
-        }
+        ObservableList<String> allUserNames = getUserNames(allUsers);
         modAppUser.setItems(allUserNames);
-
         // Customer Choice Box
-        ObservableList<Customer> allCustomer = CustomerDAO.getAllCustomers();
-        ObservableList<String> customerNames = FXCollections.observableArrayList();
-        for (Customer c : allCustomer) {
-            customerNames.add(c.getName());
-        }
+        ObservableList<String> customerNames = getCustomerNames(allCustomer);
         modAppCustomer.setItems(customerNames);
     }
 
+    private ObservableList<String> getContactNames(ObservableList<Contact> contacts) {
+        ObservableList<String> toReturn = FXCollections.observableArrayList();
+        for (Contact c : contacts) {
+            toReturn.add(c.getContactName());
+        }
+        return toReturn;
+    }
+
+    private ObservableList<String> getUserNames(ObservableList<User> users) {
+        ObservableList<String> toReturn = FXCollections.observableArrayList();
+        for (User u : users) {
+            toReturn.add(u.getUserName());
+        }
+        return toReturn;
+    }
+
+    private ObservableList<String> getCustomerNames(ObservableList<Customer> customer) {
+        ObservableList<String> toReturn = FXCollections.observableArrayList();
+        for (Customer c : customer) {
+            toReturn.add(c.getName());
+        }
+        return toReturn;
+    }
+
+    /**
+     * Sets the current Appointment of the controller to the provided appointment.
+     * The function then uses the provided Appointment's getters and setters to populate each text field and combo box.
+     *
+     * <p>
+     *     A time conversion is done ensuring that times are displayed in user's current time.
+     * </p>
+     *
+     * @param currentApp - Appointment provided by the Schedule controller.
+     */
     public void passAppointment(Appointment currentApp) {
         this.currentApp = currentApp;
         // IDs
@@ -121,10 +162,39 @@ public class ModAppointment implements Initializable {
         modAppDateBox.setValue(LocalDate.from(startDateTimeLocal));
     }
 
+    /**
+     * returns to the main menu.
+     * @param event - click on the Exit Button.
+     */
     public void onModAppExitButtonAction(ActionEvent event) throws IOException {
         showMainMenu(event);
     }
 
+    /**
+     *<p>
+     *     Variables are created and assigned based on the user's inputted values in text fields and combo boxes.
+     *     Since combo boxes are pre-populated and users are forced to enter values when creating Appointments,
+     *     these are left out of the blank checks.
+     *</p>
+     * <p>
+     *     Combo Boxes are then populated using their respective function. These functions extract the name values from
+     *     the specified Models.
+     * </p>
+     * <p>
+     *     A LocalDateTime is then created with the date value provided by the date picker and time values provided by time combo boxes.
+     *     A conditional check is then preformed to ensure that the date is in the future.
+     * </p>
+     * <p>
+     *
+     * </p>
+     * <p>
+     *     the current Appointment's setters are called to update it's values to the collected data and an UPDATE statement is used
+     *     to insert the Appointment's new values into the Database. The UPDATE statement returns a String value which is either used to
+     *     indicate a successful UPDATE or to control content of Alert shown to user.
+     * </p>
+     * @param event - Click on the Save Button.
+     * @throws IOException
+     */
     public void onModAppSaveButtonAction(ActionEvent event) throws IOException {
         try {
             int appointmentId = Integer.parseInt(modAppAppID.getText());
@@ -186,6 +256,7 @@ public class ModAppointment implements Initializable {
                 alert.showAndWait();
                 modAppStartTime.getSelectionModel().clearSelection();
                 modAppEndTime.getSelectionModel().clearSelection();
+                return;
             }
 
             // Attempting DB Update.
@@ -199,8 +270,8 @@ public class ModAppointment implements Initializable {
                 alert.setHeaderText("Start Time MUST Be Before End Time");
                 alert.setContentText("Please Enter Valid Start And End Times");
                 alert.showAndWait();
-                modAppStartTime.getSelectionModel().clearSelection();
                 modAppEndTime.getSelectionModel().clearSelection();
+                return;
             }
             else if (result == "BusinessHours") {
                 String timePattern = "hh:mm a";
@@ -219,6 +290,7 @@ public class ModAppointment implements Initializable {
                 alert.showAndWait();
                 modAppStartTime.getSelectionModel().clearSelection();
                 modAppEndTime.getSelectionModel().clearSelection();
+                return;
             }
             else if (result == "Overlap") {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -226,6 +298,7 @@ public class ModAppointment implements Initializable {
                 alert.setHeaderText("Appointment Already Exists at Specified Time");
                 alert.setContentText("Please Select a New Time");
                 alert.showAndWait();
+                return;
             }
             else {
                 throw new Exception();
@@ -237,6 +310,10 @@ public class ModAppointment implements Initializable {
         }
     }
 
+    /**
+     * Returns to main menu.
+     * @param event
+     */
     public void showMainMenu(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/view/Schedule.fxml"));
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();

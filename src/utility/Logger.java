@@ -12,6 +12,13 @@ public class Logger {
 
     public Logger() {}
 
+    /**
+     * Creates a Print writer, depending on the true/false value of the login attempt the message is changed to "Failed" or "Successful".
+     * The writer then writes the assembled message to a file named login_activity.txt.
+     *
+     * @param userName - userName of the attempted log in.
+     * @param success - Boolean value indicating whether a login attempt was successful or unsuccessful.
+     */
     public static void logAttempt(String userName, boolean success) throws IOException {
         try (FileWriter fileW = new FileWriter(fileName, true); BufferedWriter buffWriter = new BufferedWriter(fileW); PrintWriter writer = new PrintWriter(buffWriter)) {
             String successMessage = "Failed";

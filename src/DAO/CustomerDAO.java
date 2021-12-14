@@ -7,8 +7,6 @@ import utility.DBManager;
 import utility.DBQuery;
 
 import java.sql.*;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class CustomerDAO {
@@ -20,6 +18,15 @@ public class CustomerDAO {
 
     public CustomerDAO() {} // Constructor
 
+    /**
+     * A SQL statement is assigned to a String variable and the allCustomers observable list is cleared to ensure correct data.
+     * <p>
+     *     The statement is executed and while rs.next() is true, a new Customer is created out of the values found in the
+     *     columns of the database. These are added one by one to allCustomers and returned.
+     * </p>
+     *
+     * @return - an observable list containing all Customers in the database.
+     */
     public static ObservableList<Customer> getAllCustomers() {
         String sql = "SELECT * FROM customers";
         allCustomers.clear();
@@ -53,6 +60,17 @@ public class CustomerDAO {
         return allCustomers;
     }
 
+    /**
+     * <p>
+     *     A SQL statment is stored as a String to use in a prepared statement which is initialized immediately afterwards.
+     * </p>
+     * <p>
+     *     A prepared statement is prepared using key pair values and an INSERT statement is attempted.
+     *     If the insert was successful "success" is returned. Otherwise, an exception is thrown and "Fail" is returned.
+     * </p>
+     * @param c - Customer to be inserted.
+     * @return String value indicating a successful insert or why it was unsuccessful.
+     */
     public static String insertCustomer(Customer c) {
         String insertSql = "INSERT INTO customers(Customer_ID, Customer_Name, Address, Postal_Code, Phone, Create_Date," +
                 " Created_By, Last_Update, Last_Updated_By, Division_ID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -80,6 +98,17 @@ public class CustomerDAO {
         return "Fail";
     }
 
+    /**
+     * <p>
+     *     A SQL statement is stored as a String to use in a prepared statement which is initialized immediately afterwards.
+     * </p>
+     * <p>
+     *     The prepared statement is prepared using key pair values and an UPDATE statement is attempted.
+     *     If the insert was successful "success" is returned. Otherwise, an exception is thrown and "fail" is returned.
+     * </p>
+     * @param c - Customer to be updated.
+     * @return String value indicating a successful update or type of error.
+     */
     public static boolean updateCustomer(Customer c) {
         String sql = "UPDATE customers SET Customer_Name = ?, Address = ?, Postal_Code = ?, Phone = ?," +
                 " Last_Update = ?, Last_Updated_By = ?, Division_ID = ? WHERE Customer_ID = ?";
@@ -103,6 +132,13 @@ public class CustomerDAO {
         return false;
     }
 
+    /**
+     * <p>
+     *     A SQL statement is assigned to a String and a prepared statement is prepared using key value pairing.
+     *     A DELETE statement is attempted. If the delete was unsuccessful, an exception is thrown.
+     * </p>
+     * @param c - Customer to be deleted from Database.
+     */
     public static void deleteCustomer(Customer c) {
         String sql = "DELETE FROM customers WHERE Customer_ID = ?";
         try {
@@ -116,16 +152,11 @@ public class CustomerDAO {
         }
     }
 
-    public static Customer getCustomer(int id) {
-        ObservableList<Customer> all = getAllCustomers();
-        for (Customer c : all) {
-            if (id == c.getCustomerId()) {
-                return c;
-            }
-        }
-        return null;
-    }
-
+    /**
+     * Checks every customer's name against string specified in parameter. If a match is found, the Customer is returned.
+     * @param s - String, name of desired Customer.
+     * @return desired Customer.
+     */
     public static Customer getCustomerByName(String s) {
         ObservableList<Customer> customers = getAllCustomers();
         for (Customer c : customers) {
@@ -136,6 +167,11 @@ public class CustomerDAO {
         return null;
     }
 
+    /**
+     * Checks every customer's ID against string specified in parameter. If a match is found, the Customer is returned.
+     * @param i - int, ID of desired Customer.
+     * @return desired Customer.
+     */
     public static Customer getCustomerById(int i) {
         ObservableList<Customer> customer = getAllCustomers();
         for (Customer c : customer) {

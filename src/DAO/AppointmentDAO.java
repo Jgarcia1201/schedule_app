@@ -2,10 +2,8 @@ package DAO;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.Alert;
 import model.Appointment;
 import model.Customer;
-import model.User;
 import utility.DBManager;
 import utility.DBQuery;
 
@@ -17,7 +15,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class AppointmentDAO {
 
     private static Connection conn = DBManager.getConnection();
-
     private static ObservableList<Appointment> allApps = FXCollections.observableArrayList();
     private static ObservableList<Appointment> weekly = FXCollections.observableArrayList();
     private static ObservableList<Appointment> monthly = FXCollections.observableArrayList();
@@ -25,8 +22,18 @@ public class AppointmentDAO {
 
     public AppointmentDAO() {} // Constructor.
 
+    /**
+     * An Observable List is created to return.
+     * <p>
+     *     Every appointment in the database is checked. When matching IDs are found between the current Appointment and
+     *     parameter, the Appointment is added to the observable list.
+     * </p>
+     *
+     * @param c - User object.
+     * @return - An observable list containing all Appointments associated with specified user.
+     */
     public static ObservableList<Appointment> getCustomerAppointments(Customer c) {
-        ObservableList<Appointment> customerApps = FXCollections.observableArrayList();
+        ObservableList<Appointment> customerApps = FXCollections.observableArrayList(); // O(1)
         allApps = getAllApps();
         for (Appointment app : allApps) {
             if (c.getCustomerId() == app.getCustomerId()) {
@@ -36,6 +43,14 @@ public class AppointmentDAO {
         return customerApps;
     }
 
+    /**
+     * <p>
+     *     The monthly List is cleared to ensure up to date data.
+     *     Every Appointment in the database is checked using the isThisMonth() method and when a match is found it is
+     *     added to the monthly List.
+     * </p>
+     * @return - Observable List containing Appointments within a month of the current moment.
+     */
     public static ObservableList<Appointment> getMonthApps() {
         monthly.clear();
         ObservableList<Appointment> temp = getAllApps();
@@ -47,11 +62,20 @@ public class AppointmentDAO {
             }
         }
         catch (Exception e) {
-            // do nothing but fix later
+            e.printStackTrace();
         }
         return monthly;
     }
 
+
+    /**
+     * <p>
+     *     The weekly List is cleared to ensure up to date data.
+     *     Every Appointment in the database is checked using the isThisWeek() method and when a match is found it is
+     *     added to the weekly List.
+     * </p>
+     * @return - Observable List containing Appointments within a week of the current moment.
+     */
     public static ObservableList<Appointment> getWeekApps() {
         weekly.clear();
         ObservableList<Appointment> temp = getAllApps();
@@ -63,11 +87,34 @@ public class AppointmentDAO {
             }
         }
         catch (Exception e) {
-            // do nothing but fix later
+            e.printStackTrace();
         }
         return weekly;
     }
 
+    /**
+     * <p>
+     *     A SQL statment is stored as a String to use in a prepared statement which is initialized immediately afterwards.
+     * </p>
+     * <p>
+     *     Time Zone Conversion is then handled by extracting the start date of the Appointment, which is converted to UTC for
+     *     storage and all comparisons throughout the application.
+     * </p>
+     * <p>
+     *     Opening & Closing times in UTC are created here and then checked against the Appointment's start and end times.
+     *      if the Appointment is out of bounds "BusinessHours" is returned.
+     * </p>
+     * <p>
+     *     Every appointment's start and end time is then checked against the parameter's start and end time to ensure that
+     *     no overlap exists in the schedule. A logical check is also performed to ensure that the start time is before the end time.
+     * </p>
+     * <p>
+     *     If there are no errors thrown at this point the prepared statement is prepared using key pair values and an INSERT statement is attempted.
+     *     If the insert was successful "success" is returned. Otherwise, an exception is thrown.
+     * </p>
+     * @param app - Appointment to be inserted.
+     * @return String value indicating a successful insert or why it was unsuccessful.
+     */
     public static String insertAppointment(Appointment app) {
         String insertStatement = "INSERT INTO appointments(Appointment_ID, Title, Description, Location, Type, Start, End, Create_Date, Created_By, Last_Update, Last_Updated_By, Customer_ID, User_ID, Contact_ID) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try {
@@ -143,6 +190,15 @@ public class AppointmentDAO {
         }
     }
 
+    /**
+     * A SQL statement is assigned to a String variable and the allApps observable list is cleared to ensure correct data.
+     * <p>
+     *     The statement is executed and while rs.next() is true, a new Appointment is created out of the values found in the
+     *     columns of the database. These are added one by one to allApps and returned.
+     * </p>
+     *
+     * @return - an observable list containing all appointments in the database.
+     */
     public static ObservableList<Appointment> getAllApps() {
         String sqlStatement = "SELECT * FROM appointments";
         allApps.clear();
@@ -181,6 +237,14 @@ public class AppointmentDAO {
         return allApps;
     }
 
+    /**
+     * A ZoneId of UTC is specified and depending on the second parameter is used to convert the start or end time to
+     * UTC for use in the Database and across the application.
+     *
+     * @param time - time to be converted.
+     * @param c - specified if start time or end time.
+     * @return LocalDateTime in UTC.
+     */
     public static LocalDateTime handleTimeConversion(LocalDateTime time, String c) {
         try {
             String choice = c;
@@ -204,6 +268,29 @@ public class AppointmentDAO {
         return null;
     }
 
+    /**
+     * <p>
+     *     A SQL statement is stored as a String to use in a prepared statement which is initialized immediately afterwards.
+     * </p>
+     * <p>
+     *     Time Zone Conversion is then handled by extracting the start date of the Appointment, which is converted to UTC for
+     *     storage and all comparisons throughout the application.
+     * </p>
+     * <p>
+     *     Opening & Closing times in UTC are created here and then checked against the Appointment's start and end times.
+     *      if the Appointment is out of bounds "BusinessHours" is returned.
+     * </p>
+     * <p>
+     *     Every appointment's start and end time is then checked against the parameter's start and end time to ensure that
+     *     no overlap exists in the schedule. A logical check is also performed to ensure that the start time is before the end time.
+     * </p>
+     * <p>
+     *     If there are no errors thrown at this point the prepared statement is prepared using key pair values and an UPDATE statement is attempted.
+     *     If the insert was successful "success" is returned. Otherwise, an exception is thrown and "fail" is returned.
+     * </p>
+     * @param app - Appointment to be updated.
+     * @return String value indicating a successful update or type of error.
+     */
     public static String updateApp(Appointment app) {
         String sqlUpdate = "UPDATE appointments SET Title = ?, Description = ?, Location = ?, Type = ?, Start = ?, " +
                 "End = ?, Create_Date = ?, Created_By = ?, Last_Update = ?, Last_Updated_By = ?, Customer_ID = ?, User_ID = ?, Contact_ID = ? " +
@@ -272,6 +359,12 @@ public class AppointmentDAO {
         }
     }
 
+    /**
+     * Takes a LocalDateTime and checks if it is seven days from the current moment. If so, returns true otherwise the
+     * method will return false.
+     * @param time - time to be checked.
+     * @return - Boolean value indicating whether an Appointment's start time is within a week.
+     */
     private static boolean isThisWeek(LocalDateTime time) {
         ZoneId utc = ZoneId.of("UTC");
         LocalDateTime now = LocalDateTime.now(utc);
@@ -282,6 +375,12 @@ public class AppointmentDAO {
         else return false;
     }
 
+    /**
+     * Takes a LocalDateTime and checks if it is a month from the current moment. If so, returns true otherwise the
+     * method will return false.
+     * @param time - time to be checked.
+     * @return - Boolean value indicating whether an Appointment's start time is within a month.
+     */
     private static boolean isThisMonth(LocalDateTime time) {
         ZoneId utc = ZoneId.of("UTC");
         LocalDateTime now = LocalDateTime.now(utc);

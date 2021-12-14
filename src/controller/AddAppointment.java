@@ -46,6 +46,13 @@ public class AddAppointment implements Initializable {
     private final DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT);
     private final ObservableList<String> times = FXCollections.observableArrayList();
 
+    /**
+     * When initializing the AddAppointment Controller, the ComboBoxes used to select appointment contact,
+     * user, and customer are populated using Observable List. An Atomic Integer serves as an
+     * ID Generator for appointments and is initialized here.
+     * @param url
+     * @param resourceBundle
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         // Time Choice Boxes
@@ -87,6 +94,24 @@ public class AddAppointment implements Initializable {
         addAppCustomer.setItems(customerNames);
     }
 
+    /**
+     * <p>
+     *     Triggered by an action performed on the button reading "Save".
+     *      Variables are created and used to store the values of the controller's text fields and combo boxes.
+     * </p>
+     * <p>
+     *     Validation is performed on the variables ensuring valid input from user.
+     *     An Appointment class is created from the user's inputs and is inserted using the AppointmentDAO method:
+     *     insertAppointment()
+     * </p>
+     * <p>
+     *     insertAppointment() returns a String and that result is then used to decide whether to return to the main schedule
+     *     or show an error depending on the return value.
+     * </p>
+     *
+     *
+     * @param event - click on Save Button.
+     */
     public void onAddAppSaveButtonAction(ActionEvent event) {
         try {
             int appointmentId = AppointmentDAO.appIdGen.getAndIncrement();
@@ -103,6 +128,7 @@ public class AddAppointment implements Initializable {
             String lastUpdatedBy = Login.you.getUserName();
             String userChoice = addAppUser.getValue();
             String customerChoice = addAppCustomer.getValue();
+
             // Checking For Blanks.
             if (title.equals("") || description.equals("") || location.equals("") || type.equals("") || userChoice == null || customerChoice == null) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -123,15 +149,6 @@ public class AddAppointment implements Initializable {
             int contactId = contactChoice.getContactId();
             String contact = contactChoice.getContactName();
 
-            // Checking For Blanks.
-            if (title.equals("") || description.equals("") || location.equals("") || type.equals("") || userChoice.equals(null) || customerChoice.equals(null)) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("INVALID INPUTS");
-                alert.setHeaderText("Please Enter Values For All Text Fields");
-                alert.setContentText("Please Try Again");
-                alert.showAndWait();
-                return;
-            }
             // Time
             LocalDateTime startTime = LocalDateTime.of(date, LocalTime.parse(start, formatter));
             LocalDateTime endTime = LocalDateTime.of(date, LocalTime.parse(end, formatter));
@@ -153,6 +170,7 @@ public class AddAppointment implements Initializable {
             app.setUserId(userId);
             app.setContact(contact);
             app.setContactId(contactId);
+
             // Checking Time is In Future
             if (date.isBefore(LocalDate.now())) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -213,12 +231,13 @@ public class AddAppointment implements Initializable {
         }
     }
 
+    /**
+     * calls showMainMenu() and returns to Main Menu when Exit button is clicked.
+     * @param event - click on Exit Button.
+     * @throws IOException
+     */
     public void onAddAppExitButtonAction(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/view/Schedule.fxml"));
-        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-        scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
+        showMainMenu(event);
     }
 
     public void showMainMenu(ActionEvent event) throws IOException {

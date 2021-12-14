@@ -71,12 +71,20 @@ public class Schedule implements Initializable {
     private ObservableList<Appointment> weekly = FXCollections.observableArrayList();
     private ObservableList<Appointment> monthly = FXCollections.observableArrayList();
 
+    /**
+     * LAMBDA JUSTIFICATION - Makes code more readable as otherwise each eventListener would have to be added explicitly
+     * to each tab.
+     * <p>
+     *     The Appointment and Contact Table Views are then populated with Observable list containing all Contact and
+     *     Appointment objects currently stored in the DataBase.
+     * </p>
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         // Adding Event Listener to TabPane.
         allTabs.getSelectionModel().selectedItemProperty().addListener((v, oldValue, newValue) ->
                 handleChangeTab(newValue.getText())
-        ); // Lambda Expression used to Make Code More Readable. Otherwise, each tab would have a Listener added manually.
+        ); // Lambda 3
 
         
 
@@ -103,6 +111,10 @@ public class Schedule implements Initializable {
         customerTableName.setCellValueFactory(new PropertyValueFactory<>("name"));
     }
 
+    /**
+     * User is taken to the Add Appointment screen.
+     * @param event - click on the Add Appointment Button.
+     */
     public void onMainAddAppButtonAction(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/view/AddAppointment.fxml"));
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
@@ -111,6 +123,14 @@ public class Schedule implements Initializable {
         stage.show();
     }
 
+    /**
+     * The currently displayed tab is identified, and the selected Appointment object is assigned to the selected variable.
+     * The Modify Appointment controller is loaded and the selected Appointment is passed using the passAppointment method
+     * contained in the Modify Appointment Controller. If successful, the user is taken to the Modify Appointment screen,
+     * otherwise an exception is thrown and an alert is shown notify the user.
+     *
+     * @param event - Modify Appointment is clicked.
+     */
     public void onMainModAppAction(ActionEvent event) throws IOException {
         Appointment selected = new Appointment();
         try {
@@ -149,6 +169,19 @@ public class Schedule implements Initializable {
         }
     }
 
+    /**
+     * <p>
+     *     Depending on the tab selected, a String value is passed through the function.
+     *     Visibility values are set to their correct state and the Week, Table, or Month table is populated depending on
+     *     the tab selected.
+     * </p>
+     * <p>
+     *     Observable List are obtained using the getWeekApps(), getMonthApps(), and getAllApps() from the AppointmentDAO
+     *     respectively.
+     * </p>
+     *
+     * @param s - String value/Name of clicked Tab.
+     */
     public void handleChangeTab(String s) {
         if (s.equals("Week")) {
             allTable.setVisible(false);
@@ -203,6 +236,19 @@ public class Schedule implements Initializable {
         }
     }
 
+    /**
+     * <p>
+     *     A conditional check verifies that the appointment has selected an appointment from the current displaying
+     *     Table View.
+     * </p>
+     * <p>
+     *     A confirmation alert is then shown to the user verifying their desire to delete the appointment.
+     *     If the user selects Okay, a DELETE statement is executed using removeApp from the AppointmentDAO and is removed from
+     *     the appointments list.
+     * </p>
+     *
+     * @param event - click on Cancel Appointment Button.
+     */
     public void onMainCancelButtonAction(ActionEvent event) {
         if (monthTable.isVisible()) {
             Appointment selected = monthTable.getSelectionModel().getSelectedItem();
@@ -261,6 +307,10 @@ public class Schedule implements Initializable {
         }
     }
 
+    /**
+     * User is taken to Add Customer page.
+     * @param event - Click on Add Customer Button
+     */
     public void onScheduleAddCustomerAction(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/view/AddCustomer.fxml"));
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
@@ -269,6 +319,10 @@ public class Schedule implements Initializable {
         stage.show();
     }
 
+    /**
+     * User is taken to Customer Menu page.
+     * @param event - click on Customer Menu Button.
+     */
     public void onCustomerMenuButtonAction(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/view/CustomerMenu.fxml"));
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
@@ -277,11 +331,23 @@ public class Schedule implements Initializable {
         stage.show();
     }
 
+    /**
+     * Application is closed.
+     * @param event - click on Exit Button.
+     */
     public void onMainExitButtonAction(ActionEvent event) {
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         stage.close();
     }
 
+    /**
+     * The currently displayed tab is identified, and the selected Customer object is assigned to the selected variable.
+     * The Modify Customer controller is loaded and the selected Customer is passed using the passAppointment method
+     * contained in the Modify Customer Controller. If successful, the user is taken to the Modify Customer screen,
+     * otherwise an exception is thrown and an alert is shown notify the user.
+     *
+     * @param event - click on Modify Customer Button.
+     */
     public void onMainModCustomerButtonAction(ActionEvent event) {
         Stage stage;
         Scene scene;
@@ -312,6 +378,10 @@ public class Schedule implements Initializable {
         }
     }
 
+    /**
+     * User is taken to the Contact Report Page.
+     * @param event - Click on the Contact Report Button.
+     */
     public void onContactReportAction(ActionEvent event) throws IOException {
         Stage stage;
         Scene scene;
@@ -322,6 +392,10 @@ public class Schedule implements Initializable {
         stage.show();
     }
 
+    /**
+     * User is taken to the User Report Page.
+     * @param event - click on the User Report Button.
+     */
     public void onUserReportAction(ActionEvent event) throws IOException {
         Stage stage;
         Scene scene;
@@ -332,6 +406,10 @@ public class Schedule implements Initializable {
         stage.show();
     }
 
+    /**
+     * User is taken to the Schedule Report Page.
+     * @param event - click on the Schedule Report Action.
+     */
     public void onScheduleReportAction(ActionEvent event) throws IOException {
         Stage stage;
         Scene scene;
