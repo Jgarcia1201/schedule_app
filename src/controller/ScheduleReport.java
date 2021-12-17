@@ -24,7 +24,6 @@ import java.util.ResourceBundle;
 public class ScheduleReport implements Initializable {
 
     public ComboBox<String> schedMonthComboBox;
-    public ComboBox<String> schedTypeComboBox;
     public TableView<ScheduleReportItem> schedTable;
     public TableColumn<ScheduleReportItem, Integer> schedCustomerId;
     public TableColumn<ScheduleReportItem, Integer> schedCount;
@@ -46,15 +45,13 @@ public class ScheduleReport implements Initializable {
         months = initMonths(months);
         allSchedObj = getAllSchedObj();
         schedMonthComboBox.setItems(months);
-        types = initTypes();
-        schedTypeComboBox.setItems(types);
     }
 
     /**
      * Hard codes the numerical representations of months and adds them to an observable list.
      *
      * @param list - list to be added to.
-     * @return - list containing speicified String values.
+     * @return - list containing specified String values.
      */
     public ObservableList<String> initMonths(ObservableList<String> list) {
         list.add("01");
@@ -72,141 +69,26 @@ public class ScheduleReport implements Initializable {
         return list;
     }
 
-    /**
-     * Iterates over all Appointments and checks it their types are already contained in the toReturn Observable List.
-     * This ensures that all values in the toReturn list are unique.
-     *
-     * @return - Observable list of all unique Types of appointments found in the Database.
-     */
-    public ObservableList<String> initTypes() {
-        ObservableList<String> toReturn = FXCollections.observableArrayList();
-        for (Appointment a : allApps) {
-            if (!toReturn.contains(a.getType())) {
-                toReturn.add(a.getType());
-            }
-        }
-        return toReturn;
-    }
-
 
     /**
      * <p>
-     *     There are two possibilities when a user makes an action. Either a type is selected or it is not.
-     *     First the method checks for which scenario the application is currently in. If the type comboBox returns a null value,
-     *     an Observable List is created using the getCustomerAppsByMonth() method and displayed on the TableView.
+     *     When the Month ComboBox receives an action, the selection is saved as a string and an Observable List of
+     *     ScheduleReportItems is created using the getTypeAppsByMonth() method with the selected month passed as a
+     *     parameter.
      * </p>
      * <p>
-     *     Otherwise, an observable list is created using the getCustomerAppsByMonthAndType() method and that list is displayed
-     *     on the TableView.
+     *     This observable list is then set to display in the on screen table and the table is refreshed to ensure
+     *     correct data.
      * </p>
      * @param event - click on Month Combo Box.
      */
     public void onSchedMonthComboBoxAction(ActionEvent event) {
         String selectedMonth = schedMonthComboBox.getValue();
-        String selectedType = schedTypeComboBox.getValue();
-        if (selectedType == null) {
-            ObservableList<ScheduleReportItem> customerAppsByMonth = getCustomerAppsByMonth(selectedMonth);
-            schedTable.setItems(customerAppsByMonth);
-            schedCustomerId.setCellValueFactory(new PropertyValueFactory<>("customerId"));
-            schedCount.setCellValueFactory(new PropertyValueFactory<>("monthCount"));
-        }
-
-        else {
-            ObservableList<ScheduleReportItem> customerAppsByMonthAndType = getCustomerAppsByMonthAndType(selectedMonth, selectedType);
-            schedTable.setItems(customerAppsByMonthAndType);
-            schedCustomerId.setCellValueFactory(new PropertyValueFactory<>("customerId"));
-            schedCount.setCellValueFactory(new PropertyValueFactory<>("totalCount"));
-        }
-
+        ObservableList<ScheduleReportItem> appTypesAndCount = getTypeAppsByMonth(selectedMonth);
+        schedTable.setItems(appTypesAndCount);
+        schedCustomerId.setCellValueFactory(new PropertyValueFactory<>("type"));
+        schedCount.setCellValueFactory(new PropertyValueFactory<>("count"));
         schedTable.refresh();
-
-    }
-
-    /**
-     * <p>
-     *     There are two possibilities when a user makes an action. Either a month is selected or it is not.
-     *     First the method checks for which scenario the application is currently in. If the month comboBox returns a null value,
-     *     an Observable List is created using the getCustomerAppsByType() method and displayed on the TableView.
-     * </p>
-     * <p>
-     *     Otherwise, an observable list is created using the getCustomerAppsByMonthAndType() method and that list is displayed
-     *     on the TableView.
-     * </p>
-     * @param event - click on schedule month combo box.
-     */
-    public void onSchedTypeComboBoxAction(ActionEvent event) {
-        String selectedMonth = schedMonthComboBox.getValue();
-        String selectedType = schedTypeComboBox.getValue();
-        if (selectedMonth == null) {
-            ObservableList<ScheduleReportItem> customerAppsByType = getCustomerAppsByType(selectedType);
-            schedTable.setItems(customerAppsByType);
-            schedCustomerId.setCellValueFactory(new PropertyValueFactory<>("customerId"));
-            schedCount.setCellValueFactory(new PropertyValueFactory<>("typeCount"));
-        }
-
-        else {
-            ObservableList<ScheduleReportItem> customerAppsByMonthAndType = getCustomerAppsByMonthAndType(selectedMonth, selectedType);
-            schedTable.setItems(customerAppsByMonthAndType);
-            schedCustomerId.setCellValueFactory(new PropertyValueFactory<>("customerId"));
-            schedCount.setCellValueFactory(new PropertyValueFactory<>("totalCount"));
-        }
-
-        schedTable.refresh();
-    }
-
-    /**
-     * <p>
-     *     Creates an Observable List toReturn. A count is initialized to zero and every ScheduleReportItem is checked
-     *     against every Appointment. If the customer ids are shared and the Appointments type is the same as the parameter,
-     *     1 is added to the typeCount value of the ScheduleReportItem and the item is added to the toReturn list.
-     * </p>
-     *
-     * @param param - String value representing desired type.
-     * @return Observable List of all Appointments of the desired type.
-     */
-    private ObservableList<ScheduleReportItem> getCustomerAppsByType(String param) {
-        ObservableList<ScheduleReportItem> toReturn = FXCollections.observableArrayList();
-        for (ScheduleReportItem schedItem : allSchedObj) {
-            schedItem.setTypeCount(0);
-            for (Appointment app : allApps) {
-                if (app.getCustomerId() == schedItem.getCustomerId() && app.getType().equals(param)) {
-                    schedItem.setTypeCount(schedItem.getTypeCount() + 1);
-                }
-            }
-            toReturn.add(schedItem);
-        }
-        return toReturn;
-    }
-
-    /**
-     * <p>
-     *     Creates an Observable List toReturn. A count is initialized to zero and every ScheduleReportItem is checked
-     *     against every Appointment. The month is then extracted from the starting time of the appointment.
-     *     If the customer ids are shared, the Appointments type is the same as the parameter,
-     *     and the month is the same as the parameter.
-     *     1 is added to the typeCount value of the ScheduleReportItem and the item is added to the toReturn list.
-     * </p>
-     *
-     * @param selectedMonth - String value representing desired month.
-     * @param selectedType String value representing desired type.
-     * @return - Observable list containing all ScheduleReportItems of the desired type and month.
-     */
-    private ObservableList<ScheduleReportItem> getCustomerAppsByMonthAndType(String selectedMonth, String selectedType) {
-        ObservableList<ScheduleReportItem> toReturn = FXCollections.observableArrayList();
-        for (ScheduleReportItem schedItem : allSchedObj) {
-            schedItem.setTotalCount(0);
-            for (Appointment app : allApps) {
-                String start = app.getStart().toString();
-                int dashOne = start.indexOf("-");
-                int dashTwo = start.lastIndexOf("-");
-                String month = start.substring(dashOne + 1, dashTwo);
-                if (app.getCustomerId() == schedItem.getCustomerId() && month.equals(selectedMonth) && app.getType().equals(selectedType)) {
-                    schedItem.setTotalCount(schedItem.getTotalCount() + 1);
-                }
-            }
-            toReturn.add(schedItem);
-        }
-        return toReturn;
     }
 
     /**
@@ -219,17 +101,17 @@ public class ScheduleReport implements Initializable {
      * @param param - String value representing desired month.
      * @return Observable List of all Appointments of the desired month.
      */
-    private ObservableList<ScheduleReportItem> getCustomerAppsByMonth(String param) {
+    private ObservableList<ScheduleReportItem> getTypeAppsByMonth(String param) {
         ObservableList<ScheduleReportItem> toReturn = FXCollections.observableArrayList();
         for (ScheduleReportItem schedItem : allSchedObj) {
-            schedItem.setMonthCount(0);
+            schedItem.setCount(0);
             for (Appointment app : allApps) {
                 String start = app.getStart().toString();
                 int dashOne = start.indexOf("-");
                 int dashTwo = start.lastIndexOf("-");
                 String month = start.substring(dashOne + 1, dashTwo);
-                if (app.getCustomerId() == schedItem.getCustomerId() && month.equals(param)) {
-                    schedItem.setMonthCount(schedItem.getMonthCount() + 1);
+                if (app.getType().equals(schedItem.getType()) && month.equals(param)) {
+                    schedItem.setCount(schedItem.getCount() + 1);
                 }
             }
             toReturn.add(schedItem);
@@ -253,13 +135,13 @@ public class ScheduleReport implements Initializable {
      */
     private ObservableList<ScheduleReportItem> getAllSchedObj() {
         ObservableList<ScheduleReportItem> toReturn = FXCollections.observableArrayList();
-        ObservableList<Integer> duplicateCheck = FXCollections.observableArrayList();
+        ObservableList<String> duplicateCheck = FXCollections.observableArrayList();
         for (Appointment a : allApps) {
             ScheduleReportItem temp = new ScheduleReportItem();
-            int id = a.getCustomerId();
-            if (!duplicateCheck.contains(id)) {
-                duplicateCheck.add(id);
-                temp.setCustomerId(id);
+            String type = a.getType();
+            if (!duplicateCheck.contains(type)) {
+                duplicateCheck.add(type);
+                temp.setType(type);
                 toReturn.add(temp);
             }
         }

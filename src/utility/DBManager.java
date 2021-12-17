@@ -9,7 +9,7 @@ public class DBManager {
     private static final String vendor = ":mysql:";
     private static final String location = "//localhost/";
     private static final String databaseName = "client_schedule";
-    private static final String jdbcUrl = protocol + vendor + location + databaseName + "?connectionTimeZone = SERVER"; // LOCAL
+    private static final String jdbcUrl = protocol + vendor + location + databaseName + "?connectionTimeZone = LOCAL"; // LOCAL
     private static final String driver = "com.mysql.cj.jdbc.Driver"; // DRIVER REFERENCE
     private static final String userName = "sqlUser"; // Username
     private static final String password = "passw0rd!"; // Password

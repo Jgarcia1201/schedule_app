@@ -1,40 +1,22 @@
 package model;
 
 public class ScheduleReportItem {
-    private int monthCount = 0;
-    private int typeCount = 0;
-    private int totalCount = monthCount + typeCount;
-    private int customerId;
+    private int count;
+    private String type;
 
-    public int getMonthCount() {
-        return monthCount;
+    public int getCount() {
+        return count;
     }
 
-    public void setMonthCount(int monthCount) {
-        this.monthCount = monthCount;
+    public void setCount(int count) {
+        this.count = count;
     }
 
-    public int getTypeCount() {
-        return typeCount;
+    public String getType() {
+        return type;
     }
 
-    public void setTypeCount(int typeCount) {
-        this.typeCount = typeCount;
-    }
-
-    public int getTotalCount() {
-        return totalCount;
-    }
-
-    public void setTotalCount(int totalCount) {
-        this.totalCount = totalCount;
-    }
-
-    public int getCustomerId() {
-        return customerId;
-    }
-
-    public void setCustomerId(int customerId) {
-        this.customerId = customerId;
+    public void setType(String type) {
+        this.type = type;
     }
 }

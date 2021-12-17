@@ -1,9 +1,8 @@
 package model;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.TimeZone;
 
 public class Appointment {
@@ -149,11 +148,10 @@ public class Appointment {
     }
 
     public void setDisplayStart(LocalDateTime time) {
-        ZoneId utc = ZoneId.of("UTC");
-        ZoneId local = ZoneId.of(TimeZone.getDefault().getID());
-        ZonedDateTime utcTime = ZonedDateTime.of(time, utc);
-        LocalDateTime convertedTime = utcTime.withZoneSameInstant(local).toLocalDateTime();
-        this.displayStart = convertedTime.format(DateTimeFormatter.ofPattern(pattern));
+        ZonedDateTime utc = ZonedDateTime.of(time, ZoneId.of("UTC"));
+        ZoneId localId = ZoneId.systemDefault();
+        LocalDateTime local = utc.withZoneSameInstant(localId).toLocalDateTime();
+        this.displayStart = local.toString();
     }
 
     public String getDisplayStart() {
@@ -161,11 +159,10 @@ public class Appointment {
     }
 
     public void setDisplayEnd(LocalDateTime time) {
-        ZoneId utc = ZoneId.of("UTC");
-        ZoneId local = ZoneId.of(TimeZone.getDefault().getID());
-        ZonedDateTime utcTime = ZonedDateTime.of(time, utc);
-        LocalDateTime convertedTime = utcTime.withZoneSameInstant(local).toLocalDateTime();
-        this.displayEnd = convertedTime.format(DateTimeFormatter.ofPattern(pattern));
+        ZonedDateTime utc = ZonedDateTime.of(time, ZoneId.of("UTC"));
+        ZoneId localId = ZoneId.of(TimeZone.getDefault().getID());
+        LocalDateTime local = utc.withZoneSameInstant(localId).toLocalDateTime();
+        this.displayEnd = local.toString();
     }
 
     public String getDisplayEnd() {

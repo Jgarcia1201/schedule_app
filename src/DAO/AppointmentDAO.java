@@ -9,7 +9,6 @@ import utility.DBQuery;
 
 import java.sql.*;
 import java.time.*;
-import java.util.TimeZone;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class AppointmentDAO {
@@ -247,8 +246,7 @@ public class AppointmentDAO {
      */
     public static LocalDateTime handleTimeConversion(LocalDateTime time, String c) {
         try {
-            String choice = c;
-            ZoneId localZoneId = ZoneId.of(TimeZone.getDefault().getID()); // Getting Local Timezone
+            ZoneId localZoneId = ZoneId.systemDefault(); // Getting Local Timezone
             ZoneId uctZoneId = ZoneId.of("UTC");
 
             switch (c) {

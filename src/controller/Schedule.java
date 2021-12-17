@@ -259,12 +259,13 @@ public class Schedule implements Initializable {
                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                 alert.setTitle("Delete Confirmation");
                 alert.setHeaderText("WARNING!");
-                alert.setContentText("Are You Sure You Want To Delete: " + selected.getAppointmentId() + " " + selected.getTitle() + " a " + selected.getType() + " Appointment?");
+                alert.setContentText("Are You Sure You Want To Delete: \n\n"
+                        + selected.getTitle() + " a " + selected.getType() + " Appointment?" + "\n"
+                        + "Appointment ID: " + selected.getAppointmentId());
                 Optional<ButtonType> result = alert.showAndWait();
                 if (result.isPresent() && result.get() == ButtonType.OK) {
                     AppointmentDAO.removeApp(selected);
                     appointments.remove(selected);
-                    monthly.remove(selected);
                 }
             }
         }
@@ -277,12 +278,13 @@ public class Schedule implements Initializable {
                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                 alert.setTitle("Delete Confirmation");
                 alert.setHeaderText("WARNING!");
-                alert.setContentText("Are You Sure You Want To Delete: " + selected.getAppointmentId() + " " + selected.getTitle() + " a " + selected.getType() + " Appointment?");
+                alert.setContentText("Are You Sure You Want To Delete: \n\n"
+                        + selected.getTitle() + " a " + selected.getType() + " Appointment?" + "\n"
+                        + "Appointment ID: " + selected.getAppointmentId());
                 Optional<ButtonType> result = alert.showAndWait();
                 if (result.isPresent() && result.get() == ButtonType.OK) {
                     AppointmentDAO.removeApp(selected);
                     appointments.remove(selected);
-                    weekly.remove(selected);
                 }
             }
         }
@@ -295,9 +297,9 @@ public class Schedule implements Initializable {
                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                 alert.setTitle("Delete Confirmation");
                 alert.setHeaderText("WARNING!");
-                alert.setContentText("Are You Sure You Want To Delete: \n"
-                        + selected.getTitle() + " a " + selected.getType() + " Appointment?" + "\n\n"
-                        + "ID Number: " + selected.getAppointmentId());
+                alert.setContentText("Are You Sure You Want To Delete: \n\n"
+                        + selected.getTitle() + " a " + selected.getType() + " Appointment?" + "\n"
+                        + "Appointment ID: " + selected.getAppointmentId());
                 Optional<ButtonType> result = alert.showAndWait();
                 if (result.isPresent() && result.get() == ButtonType.OK) {
                     AppointmentDAO.removeApp(selected);

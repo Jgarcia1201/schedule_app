@@ -152,6 +152,7 @@ public class AddAppointment implements Initializable {
             // Time
             LocalDateTime startTime = LocalDateTime.of(date, LocalTime.parse(start, formatter));
             LocalDateTime endTime = LocalDateTime.of(date, LocalTime.parse(end, formatter));
+            System.out.println("AddAppointment startTime: " + startTime);
 
             // Creating New Appointment
             Appointment app = new Appointment();
