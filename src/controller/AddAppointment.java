@@ -65,7 +65,7 @@ public class AddAppointment implements Initializable {
         addAppEndTime.setItems(times);
 
         // Appointment ID Generation
-        AppointmentDAO.appIdGen.set(AppointmentDAO.getAllApps().size() + 1); // Setting ID Generator to Size of AllApps + 1.
+        AppointmentDAO.appIdGen.set(AppointmentDAO.getAllApps().get(AppointmentDAO.getAllApps().size() - 1).getAppointmentId() + 1); // Setting ID Generator to Size of AllApps + 1.
         int appointmentId = AppointmentDAO.appIdGen.get();
         addAppAppID.setText(String.valueOf(appointmentId));
 

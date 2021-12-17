@@ -36,7 +36,7 @@ public class ScheduleReport implements Initializable {
     /**
      * Initializes all Observable Lists to be used throughout the class.
      * <p>
-     *     In addition the month and Type Combo boxes are populated with their repspective observable list.
+     *     In addition the month comboBox is populated using the method initMonths().
      * </p>
      */
     @Override
@@ -94,8 +94,8 @@ public class ScheduleReport implements Initializable {
     /**
      * <p>
      *     Creates an Observable List toReturn. A count is initialized to zero and every ScheduleReportItem is checked
-     *     against every Appointment. If the customer ids are shared and the Appointments month is the same as the parameter,
-     *     1 is added to the month Count value of the ScheduleReportItem and the item is added to the toReturn list.
+     *     against every Appointment. If the types are shared and the Appointments month is the same as the parameter,
+     *     1 is added to the count value of the ScheduleReportItem and the item is added to the toReturn list.
      * </p>
      *
      * @param param - String value representing desired month.
@@ -125,8 +125,8 @@ public class ScheduleReport implements Initializable {
      * </p>
      * <p>
      *     For every Appointment in allApps a new ScheduleReportItem is created. An if statement then checks whether the
-     *     duplicateCheck list already contains the Appointments Customer Id. If the ID is unique, the id is added to the
-     *     duplicate list, the ScheduleReportItem's customerID value is set to the unique ID and then added to the return list.
+     *     duplicateCheck list already contains the Appointments Type. If the type is unique, the type is added to the
+     *     duplicate list, the ScheduleReportItem's customerID value is set to the unique type and then added to the return list.
      * </p>
      * <p>
      *     After every appointment, the toReturn list is returned.
